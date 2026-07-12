@@ -5,13 +5,16 @@ from sqlalchemy.orm import sessionmaker, declarative_base
 
 load_dotenv()
 DATABASE_URL = os.getenv("DATABASE_URL")
+if not DATABASE_URL:
+    raise RuntimeError("DATABASE_URL не задан. Проверь .env файл")
 engine = create_engine(DATABASE_URL)
-SessionLocal = sessionmaker(autocommit=False,autoflush=False, bind=engine)
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
 
+
 def get_db():
-   db = SessionLocal()
-   try:
-      yield db
-   finally:
-      db.close()
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
