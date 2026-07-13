@@ -3,7 +3,6 @@ import jwt
 from datetime import datetime, timedelta, timezone
 
 from database import engine, Base, get_db
-import models
 from models import User, Vacancy
 import bcrypt
 
@@ -95,6 +94,8 @@ def get_vacancy(vacancy_id: int, db: Session = Depends(get_db)):
     if not vacancy:
         raise HTTPException(status_code=404, detail="Вакансия не найдена")
     return vacancy
+
+
 
 
 @app.post("/register")
