@@ -4,7 +4,7 @@ from datetime import datetime, timedelta, timezone
 
 from database import engine, Base, get_db
 import models
-from models import User
+from models import User, Vacancy
 import bcrypt
 
 from pydantic import BaseModel, EmailStr
@@ -52,6 +52,49 @@ def say_hello(name: str):
 class UserRegister(BaseModel):
     email: EmailStr
     password: str
+
+
+class VacancyCreate(BaseModel):
+    title: str
+    company: str
+    location: str
+    salary: str | None = None
+    description: str
+    url: str | None = None
+
+
+class VacancyOut(VacancyCreate):
+    id: int
+    model_config = {"from_attributes": True}
+
+
+@app.post("/vacancies", response_model=VacancyOut)
+def create_vacancy(vacancy: VacancyCreate, db: Session = Depends(get_db)):
+    new_vacancy = Vacancy(
+        title=vacancy.title,
+        company=vacancy.company,
+        location=vacancy.location,
+        salary=vacancy.salary,
+        description=vacancy.description,
+        url=vacancy.url,
+    )
+    db.add(new_vacancy)
+    db.commit()
+    db.refresh(new_vacancy)
+    return new_vacancy
+
+
+@app.get("/vacancies", response_model=list[VacancyOut])
+def list_vacancies(db: Session = Depends(get_db)):
+    return db.query(Vacancy).all()
+
+
+@app.get("/vacancies/{vacancy_id}", response_model=VacancyOut)
+def get_vacancy(vacancy_id: int, db: Session = Depends(get_db)):
+    vacancy = db.query(Vacancy).filter(Vacancy.id == vacancy_id).first()
+    if not vacancy:
+        raise HTTPException(status_code=404, detail="Вакансия не найдена")
+    return vacancy
 
 
 @app.post("/register")
