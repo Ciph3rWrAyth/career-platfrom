@@ -68,6 +68,13 @@ class VacancyOut(VacancyCreate):
     model_config = {"from_attributes": True}
 
 
+def get_vacancy_or_404(vacancy_id: int, db: Session = Depends(get_db)) -> Vacancy:
+    vacancy = db.query(Vacancy).filter(Vacancy.id == vacancy_id).first()
+    if not vacancy:
+        raise HTTPException(status_code=404, detail="Вакансия не найдена")
+    return vacancy
+
+
 @app.post("/vacancies", response_model=VacancyOut)
 def create_vacancy(vacancy: VacancyCreate, db: Session = Depends(get_db)):
     new_vacancy = Vacancy(
@@ -90,11 +97,36 @@ def list_vacancies(db: Session = Depends(get_db)):
 
 
 @app.get("/vacancies/{vacancy_id}", response_model=VacancyOut)
-def get_vacancy(vacancy_id: int, db: Session = Depends(get_db)):
-    vacancy = db.query(Vacancy).filter(Vacancy.id == vacancy_id).first()
-    if not vacancy:
-        raise HTTPException(status_code=404, detail="Вакансия не найдена")
+def get_vacancy(vacancy: Vacancy = Depends(get_vacancy_or_404)):
     return vacancy
+
+
+@app.put("/vacancies/{vacancy_id}", response_model=VacancyOut)
+def update_vacancy(
+    vacancy_data: VacancyCreate,
+    vacancy: Vacancy = Depends(get_vacancy_or_404),
+    db: Session = Depends(get_db),
+):
+    vacancy.title = vacancy_data.title
+    vacancy.company = vacancy_data.company
+    vacancy.location = vacancy_data.location
+    vacancy.salary = vacancy_data.salary
+    vacancy.description = vacancy_data.description
+    vacancy.url = vacancy_data.url
+    db.commit()
+    db.refresh(vacancy)
+    return vacancy
+
+
+@app.delete("/vacancies/{vacancy_id}")
+def delete_vacancy(
+    vacancy: Vacancy = Depends(get_vacancy_or_404),
+    db: Session = Depends(get_db),
+):
+    db.delete(vacancy)
+    db.commit()
+    return {"message": "Вакансия удалена "}
+
 
 @app.post("/register")
 def register(user: UserRegister, db: Session = Depends(get_db)):
