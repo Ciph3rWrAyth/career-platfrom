@@ -3,7 +3,6 @@ import jwt
 from datetime import datetime, timedelta, timezone
 
 from database import engine, Base, get_db
-import models
 from models import User, Vacancy
 import bcrypt
 
@@ -125,7 +124,7 @@ def delete_vacancy(
 ):
     db.delete(vacancy)
     db.commit()
-    return {"message": "Вакансия удалена "}
+    return {"message": "Вакансия удалена"}
 
 
 @app.post("/register")
