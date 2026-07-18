@@ -20,3 +20,4 @@ class Vacancy(Base):
     salary = Column(String, nullable=True)
     description = Column(Text)
     url = Column(String, nullable=True)
+    source = Column(String, nullable=True)

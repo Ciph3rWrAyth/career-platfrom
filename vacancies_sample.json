@@ -1,0 +1,402 @@
+[
+  {
+    "title": "Python Backend Developer",
+    "company": "Kaspi.kz",
+    "location": "Алматы",
+    "salary": "от 700 000 тг",
+    "description": "Разработка и поддержка высоконагруженных сервисов на Python (FastAPI, Django). Работа с PostgreSQL, Redis, Docker. Опыт написания REST API, знание SQL, понимание микросервисной архитектуры. Приветствуется опыт с Kafka и Kubernetes.",
+    "url": "https://hh.kz/vacancy/1000001"
+  },
+  {
+    "title": "Frontend Developer (React)",
+    "company": "Kolesa Group",
+    "location": "Алматы",
+    "salary": "от 600 000 тг",
+    "description": "Разработка пользовательских интерфейсов на React и TypeScript. Вёрстка по макетам Figma, работа с REST API, state-менеджмент (Redux). Знание HTML, CSS, JavaScript обязательно. Опыт с Next.js будет плюсом.",
+    "url": "https://hh.kz/vacancy/1000002"
+  },
+  {
+    "title": "Data Analyst",
+    "company": "Halyk Bank",
+    "location": "Алматы",
+    "salary": "от 500 000 тг",
+    "description": "Анализ банковских данных, построение дашбордов в Tableau и Power BI. Написание SQL-запросов, работа с большими данными. Знание Python (pandas, numpy), статистики. Опыт визуализации данных и подготовки отчётности.",
+    "url": "https://hh.kz/vacancy/1000003"
+  },
+  {
+    "title": "DevOps Engineer",
+    "company": "BTS Digital",
+    "location": "Астана",
+    "salary": "от 800 000 тг",
+    "description": "Настройка и поддержка CI/CD пайплайнов (GitLab CI, Jenkins). Работа с Docker, Kubernetes, Terraform. Администрирование Linux-серверов, облачные платформы (AWS). Мониторинг (Prometheus, Grafana), скриптинг на Bash и Python.",
+    "url": "https://hh.kz/vacancy/1000004"
+  },
+  {
+    "title": "QA Engineer (Automation)",
+    "company": "Chocofamily",
+    "location": "Алматы",
+    "salary": "от 450 000 тг",
+    "description": "Автоматизация тестирования веб-приложений на Python (pytest, Selenium). Написание тест-кейсов, API-тестирование (Postman). Понимание HTTP, работа с Git. Опыт ручного тестирования и знание принципов QA.",
+    "url": "https://hh.kz/vacancy/1000005"
+  },
+  {
+    "title": "Machine Learning Engineer",
+    "company": "Beeline Kazakhstan",
+    "location": "Алматы",
+    "salary": "от 900 000 тг",
+    "description": "Разработка ML-моделей для рекомендательных систем и прогнозирования оттока. Python, scikit-learn, PyTorch, TensorFlow. Работа с данными (pandas), деплой моделей. Опыт с NLP и эмбеддингами приветствуется.",
+    "url": "https://hh.kz/vacancy/1000006"
+  },
+  {
+    "title": "Java Developer",
+    "company": "Freedom Finance",
+    "location": "Астана",
+    "salary": "от 650 000 тг",
+    "description": "Разработка серверной части финансовых приложений на Java (Spring Boot). Работа с PostgreSQL, REST API, микросервисы. Знание ООП, многопоточности, паттернов проектирования. Опыт с Kafka и Docker будет плюсом.",
+    "url": "https://hh.kz/vacancy/1000007"
+  },
+  {
+    "title": "Mobile Developer (Flutter)",
+    "company": "Kaspi.kz",
+    "location": "Алматы",
+    "salary": "от 600 000 тг",
+    "description": "Разработка кроссплатформенных мобильных приложений на Flutter и Dart. Интеграция с REST API, работа с состоянием (Bloc, Provider). Публикация в App Store и Google Play. Понимание UI/UX принципов.",
+    "url": "https://hh.kz/vacancy/1000008"
+  },
+  {
+    "title": "Junior Python Developer",
+    "company": "DAR (Data of Real time)",
+    "location": "Алматы",
+    "salary": "от 300 000 тг",
+    "description": "Стартовая позиция для начинающих. Разработка на Python, изучение FastAPI и PostgreSQL под менторством. Базовые знания SQL, Git, понимание REST API. Отличная возможность войти в IT для студентов и выпускников.",
+    "url": "https://hh.kz/vacancy/1000009"
+  },
+  {
+    "title": "Data Engineer",
+    "company": "Kolesa Group",
+    "location": "Алматы",
+    "salary": "от 750 000 тг",
+    "description": "Построение и поддержка ETL-пайплайнов. Работа с Apache Airflow, Spark, Kafka. Проектирование хранилищ данных, оптимизация SQL. Python для обработки данных, облачные сервисы. Опыт с ClickHouse приветствуется.",
+    "url": "https://hh.kz/vacancy/1000010"
+  },
+  {
+    "title": "System Administrator",
+    "company": "Казахтелеком",
+    "location": "Астана",
+    "salary": "от 400 000 тг",
+    "description": "Администрирование серверов Linux и Windows. Настройка сети, VPN, мониторинг инфраструктуры. Резервное копирование, обеспечение безопасности. Знание Bash-скриптинга, основ виртуализации (VMware, Proxmox).",
+    "url": "https://hh.kz/vacancy/1000011"
+  },
+  {
+    "title": "Product Manager (IT)",
+    "company": "Chocofamily",
+    "location": "Алматы",
+    "salary": "от 700 000 тг",
+    "description": "Управление продуктом на всех этапах жизненного цикла. Работа с командой разработки по Agile/Scrum. Анализ метрик, построение roadmap, приоритизация задач. Понимание UX, базовые технические знания, аналитическое мышление.",
+    "url": "https://hh.kz/vacancy/1000012"
+  },
+  {
+    "title": "Fullstack Developer (Node.js + React)",
+    "company": "inDrive",
+    "location": "Алматы",
+    "salary": "от 900 000 тг",
+    "description": "Разработка веб-приложений на Node.js (Express, NestJS) и React. Проектирование REST и GraphQL API, работа с PostgreSQL и MongoDB. Знание TypeScript, Docker. Опыт полного цикла разработки от идеи до продакшена.",
+    "url": "https://hh.kz/vacancy/1000013"
+  },
+  {
+    "title": "iOS Developer (Swift)",
+    "company": "Kaspi.kz",
+    "location": "Алматы",
+    "salary": "от 800 000 тг",
+    "description": "Разработка нативных iOS-приложений на Swift. Работа с UIKit, SwiftUI, интеграция REST API. Понимание архитектур MVVM, VIPER. Публикация в App Store, оптимизация производительности. Знание Git обязательно.",
+    "url": "https://hh.kz/vacancy/1000014"
+  },
+  {
+    "title": "Android Developer (Kotlin)",
+    "company": "Halyk Bank",
+    "location": "Алматы",
+    "salary": "от 750 000 тг",
+    "description": "Разработка мобильного банка на Kotlin. Jetpack Compose, Coroutines, работа с REST API и базами данных Room. Архитектура MVVM, Dependency Injection (Hilt). Опыт публикации в Google Play.",
+    "url": "https://hh.kz/vacancy/1000015"
+  },
+  {
+    "title": "Golang Developer",
+    "company": "inDrive",
+    "location": "Астана",
+    "salary": "от 1 000 000 тг",
+    "description": "Разработка высоконагруженных микросервисов на Go. Работа с gRPC, Kafka, PostgreSQL, Redis. Проектирование распределённых систем, Docker, Kubernetes. Понимание конкурентности, оптимизация производительности.",
+    "url": "https://hh.kz/vacancy/1000016"
+  },
+  {
+    "title": "C#/.NET Developer",
+    "company": "Jusan Bank",
+    "location": "Алматы",
+    "salary": "от 700 000 тг",
+    "description": "Разработка корпоративных приложений на C# (.NET Core, ASP.NET). Entity Framework, работа с MS SQL Server. REST API, микросервисы, паттерны проектирования. Знание SOLID, опыт с Docker будет плюсом.",
+    "url": "https://hh.kz/vacancy/1000017"
+  },
+  {
+    "title": "PHP Developer (Laravel)",
+    "company": "Chocofamily",
+    "location": "Алматы",
+    "salary": "от 550 000 тг",
+    "description": "Разработка backend на PHP (Laravel). Проектирование REST API, работа с MySQL, Redis. Написание миграций, очереди, кэширование. Знание ООП, Git, основ фронтенда (Vue.js) приветствуется.",
+    "url": "https://hh.kz/vacancy/1000018"
+  },
+  {
+    "title": "1C Developer",
+    "company": "Технодом",
+    "location": "Алматы",
+    "salary": "от 500 000 тг",
+    "description": "Разработка и доработка конфигураций 1С:Предприятие 8. Работа с бухгалтерией, УТ, ЗУП. Написание запросов, отчётов, обменов данными. Понимание учётных процессов, опыт интеграций с внешними системами.",
+    "url": "https://hh.kz/vacancy/1000019"
+  },
+  {
+    "title": "QA Engineer (Manual)",
+    "company": "Kcell",
+    "location": "Алматы",
+    "salary": "от 400 000 тг",
+    "description": "Ручное тестирование веб и мобильных приложений. Написание тест-кейсов и баг-репортов, работа с Jira, TestRail. Функциональное, регрессионное тестирование. Понимание SDLC, базовые знания SQL и API-тестирования.",
+    "url": "https://hh.kz/vacancy/1000020"
+  },
+  {
+    "title": "UI/UX Designer",
+    "company": "Kolesa Group",
+    "location": "Алматы",
+    "salary": "от 550 000 тг",
+    "description": "Проектирование интерфейсов веб и мобильных продуктов. Работа в Figma, создание прототипов, дизайн-систем. Понимание UX-исследований, юзабилити. Взаимодействие с разработкой, знание принципов адаптивного дизайна.",
+    "url": "https://hh.kz/vacancy/1000021"
+  },
+  {
+    "title": "Business Analyst",
+    "company": "ForteBank",
+    "location": "Астана",
+    "salary": "от 600 000 тг",
+    "description": "Сбор и анализ бизнес-требований, написание ТЗ и user stories. Моделирование процессов (BPMN, UML). Взаимодействие с заказчиком и командой разработки. Знание SQL, опыт работы в банковской сфере приветствуется.",
+    "url": "https://hh.kz/vacancy/1000022"
+  },
+  {
+    "title": "Project Manager (IT)",
+    "company": "EPAM Kazakhstan",
+    "location": "Алматы",
+    "salary": "от 850 000 тг",
+    "description": "Управление IT-проектами по Agile/Scrum и Waterfall. Планирование, контроль сроков и бюджета, управление рисками. Работа с Jira, Confluence. Взаимодействие с командой и заказчиком, английский язык.",
+    "url": "https://hh.kz/vacancy/1000023"
+  },
+  {
+    "title": "Database Administrator (PostgreSQL)",
+    "company": "Freedom Finance",
+    "location": "Алматы",
+    "salary": "от 800 000 тг",
+    "description": "Администрирование баз данных PostgreSQL. Оптимизация запросов, настройка репликации и бэкапов, мониторинг производительности. Знание SQL на продвинутом уровне, опыт с высоконагруженными системами.",
+    "url": "https://hh.kz/vacancy/1000024"
+  },
+  {
+    "title": "Information Security Specialist",
+    "company": "Halyk Bank",
+    "location": "Алматы",
+    "salary": "от 750 000 тг",
+    "description": "Обеспечение информационной безопасности банка. Анализ уязвимостей, реагирование на инциденты, работа с SIEM. Знание сетевой безопасности, шифрования, стандартов ISO 27001. Опыт пентеста приветствуется.",
+    "url": "https://hh.kz/vacancy/1000025"
+  },
+  {
+    "title": "Frontend Developer (Vue.js)",
+    "company": "Arbuz.kz",
+    "location": "Алматы",
+    "salary": "от 600 000 тг",
+    "description": "Разработка интерфейсов интернет-магазина на Vue.js (Vuex, Nuxt). Вёрстка HTML/CSS, работа с REST API, оптимизация производительности. Знание JavaScript, TypeScript. Понимание адаптивной и кроссбраузерной вёрстки.",
+    "url": "https://hh.kz/vacancy/1000026"
+  },
+  {
+    "title": "Backend Developer (Django)",
+    "company": "Ozon Kazakhstan",
+    "location": "Астана",
+    "salary": "от 700 000 тг",
+    "description": "Разработка backend на Python (Django, DRF). Проектирование REST API, работа с PostgreSQL, Celery, Redis. Написание тестов, code review. Знание Docker, опыт с высоконагруженными сервисами.",
+    "url": "https://hh.kz/vacancy/1000027"
+  },
+  {
+    "title": "Data Scientist",
+    "company": "Kaspi.kz",
+    "location": "Алматы",
+    "salary": "от 1 100 000 тг",
+    "description": "Построение моделей машинного обучения для скоринга и рекомендаций. Python (pandas, scikit-learn), статистика, A/B-тесты. Работа с большими данными (SQL, Spark). Опыт deep learning и NLP будет плюсом.",
+    "url": "https://hh.kz/vacancy/1000028"
+  },
+  {
+    "title": "DevOps Engineer (Kubernetes)",
+    "company": "Air Astana",
+    "location": "Алматы",
+    "salary": "от 900 000 тг",
+    "description": "Управление контейнерной инфраструктурой на Kubernetes. Настройка Helm, CI/CD, GitOps (ArgoCD). Облачные платформы Azure, мониторинг и логирование. Скриптинг на Python и Bash, Infrastructure as Code.",
+    "url": "https://hh.kz/vacancy/1000029"
+  },
+  {
+    "title": "Technical Support Engineer",
+    "company": "Beeline Kazakhstan",
+    "location": "Астана",
+    "salary": "от 350 000 тг",
+    "description": "Техническая поддержка пользователей и систем 2-й линии. Диагностика инцидентов, работа с тикет-системой. Базовые знания Linux, SQL, сетей. Коммуникабельность, готовность к обучению. Подходит для старта в IT.",
+    "url": "https://hh.kz/vacancy/1000030"
+  },
+  {
+    "title": "Scrum Master",
+    "company": "EPAM Kazakhstan",
+    "location": "Алматы",
+    "salary": "от 800 000 тг",
+    "description": "Организация работы команды по Scrum/Kanban. Проведение церемоний, устранение препятствий, коучинг команды. Работа с Jira, метрики команды. Сертификация Scrum (CSM, PSM) и английский язык приветствуются.",
+    "url": "https://hh.kz/vacancy/1000031"
+  },
+  {
+    "title": "Machine Learning Intern",
+    "company": "DAR (Data of Real time)",
+    "location": "Алматы",
+    "salary": "от 250 000 тг",
+    "description": "Стажировка в области ML для студентов. Изучение Python, scikit-learn, работа с данными под менторством. Участие в реальных проектах, базовая математика и статистика. Отличный старт карьеры в Data Science.",
+    "url": "https://hh.kz/vacancy/1000032"
+  },
+  {
+    "title": "React Native Developer",
+    "company": "Chocofamily",
+    "location": "Алматы",
+    "salary": "от 650 000 тг",
+    "description": "Разработка кроссплатформенных мобильных приложений на React Native. JavaScript/TypeScript, интеграция REST API, работа с состоянием (Redux). Публикация в сторы, знание нативных модулей будет плюсом.",
+    "url": "https://hh.kz/vacancy/1000033"
+  },
+  {
+    "title": "Node.js Backend Developer",
+    "company": "Arbuz.kz",
+    "location": "Алматы",
+    "salary": "от 700 000 тг",
+    "description": "Разработка backend на Node.js (NestJS, Express). Проектирование REST API, работа с PostgreSQL, MongoDB, Redis. Микросервисы, очереди сообщений (RabbitMQ). Знание TypeScript, Docker, опыт с CI/CD.",
+    "url": "https://hh.kz/vacancy/1000034"
+  },
+  {
+    "title": "SQL Developer",
+    "company": "Eurasian Bank",
+    "location": "Алматы",
+    "salary": "от 550 000 тг",
+    "description": "Разработка и оптимизация SQL-запросов, хранимых процедур. Работа с MS SQL Server, Oracle. Проектирование схем данных, построение отчётов. Знание ETL-процессов, базовые навыки Python приветствуются.",
+    "url": "https://hh.kz/vacancy/1000035"
+  },
+  {
+    "title": "Cloud Engineer (AWS)",
+    "company": "BTS Digital",
+    "location": "Астана",
+    "salary": "от 950 000 тг",
+    "description": "Проектирование и поддержка облачной инфраструктуры в AWS (EC2, S3, RDS, Lambda). Infrastructure as Code (Terraform), CI/CD, контейнеризация. Обеспечение отказоустойчивости и безопасности. Скриптинг на Python.",
+    "url": "https://hh.kz/vacancy/1000036"
+  },
+  {
+    "title": "Frontend Developer (Angular)",
+    "company": "Home Credit Bank",
+    "location": "Алматы",
+    "salary": "от 650 000 тг",
+    "description": "Разработка веб-приложений на Angular (RxJS, NgRx). TypeScript, вёрстка по макетам, работа с REST API. Компонентный подход, unit-тесты (Jasmine, Karma). Знание HTML, CSS, адаптивной вёрстки.",
+    "url": "https://hh.kz/vacancy/1000037"
+  },
+  {
+    "title": "Java Spring Developer",
+    "company": "Bank RBK",
+    "location": "Алматы",
+    "salary": "от 750 000 тг",
+    "description": "Разработка банковских сервисов на Java (Spring Boot, Spring Cloud). Микросервисы, REST API, PostgreSQL, Kafka. Знание Hibernate, Docker, паттернов проектирования. Опыт работы с высоконагруженными системами.",
+    "url": "https://hh.kz/vacancy/1000038"
+  },
+  {
+    "title": "QA Lead",
+    "company": "Kaspi.kz",
+    "location": "Алматы",
+    "salary": "от 1 000 000 тг",
+    "description": "Руководство командой тестирования. Построение процессов QA, стратегии тестирования, менторинг. Опыт автоматизации (Python/Java), CI/CD. Управление качеством продукта, работа с метриками. Лидерские навыки.",
+    "url": "https://hh.kz/vacancy/1000039"
+  },
+  {
+    "title": "Big Data Engineer",
+    "company": "Beeline Kazakhstan",
+    "location": "Алматы",
+    "salary": "от 950 000 тг",
+    "description": "Построение платформы больших данных на Hadoop, Spark, Kafka. Разработка ETL на Python/Scala, работа с Hive, ClickHouse. Проектирование data lake, оптимизация обработки данных. Опыт с потоковой обработкой.",
+    "url": "https://hh.kz/vacancy/1000040"
+  },
+  {
+    "title": "Cybersecurity Analyst",
+    "company": "Казахтелеком",
+    "location": "Астана",
+    "salary": "от 700 000 тг",
+    "description": "Мониторинг и анализ угроз информационной безопасности. Работа с SIEM, IDS/IPS, анализ логов. Расследование инцидентов, оценка рисков. Знание сетевых протоколов, основ криптографии, стандартов ISO 27001.",
+    "url": "https://hh.kz/vacancy/1000041"
+  },
+  {
+    "title": "Product Designer",
+    "company": "inDrive",
+    "location": "Алматы",
+    "salary": "от 800 000 тг",
+    "description": "Проектирование пользовательского опыта мобильного продукта. Figma, прототипирование, дизайн-системы, UX-исследования. Работа с продуктовыми метриками, A/B-тесты. Взаимодействие с продактами и разработкой.",
+    "url": "https://hh.kz/vacancy/1000042"
+  },
+  {
+    "title": "Python ML Engineer (NLP)",
+    "company": "Kaspi.kz",
+    "location": "Алматы",
+    "salary": "от 1 200 000 тг",
+    "description": "Разработка NLP-решений: чат-боты, классификация текста, семантический поиск. Python, PyTorch, Transformers, sentence-transformers, работа с эмбеддингами. Векторные базы (FAISS, ChromaDB), деплой моделей в продакшн.",
+    "url": "https://hh.kz/vacancy/1000043"
+  },
+  {
+    "title": "Junior Frontend Developer",
+    "company": "Kolesa Group",
+    "location": "Алматы",
+    "salary": "от 350 000 тг",
+    "description": "Стартовая позиция для начинающих фронтендеров. HTML, CSS, JavaScript, основы React под менторством. Вёрстка по макетам, работа с Git. Желание учиться и развиваться. Подходит студентам и выпускникам.",
+    "url": "https://hh.kz/vacancy/1000044"
+  },
+  {
+    "title": "Backend Developer (Golang)",
+    "company": "Kaspi.kz",
+    "location": "Алматы",
+    "salary": "от 1 000 000 тг",
+    "description": "Разработка микросервисов на Go для платёжных систем. gRPC, PostgreSQL, Redis, Kafka. Высокая нагрузка, распределённые транзакции, Docker, Kubernetes. Понимание конкурентности и оптимизации.",
+    "url": "https://hh.kz/vacancy/1000045"
+  },
+  {
+    "title": "Junior Data Analyst",
+    "company": "Halyk Bank",
+    "location": "Алматы",
+    "salary": "от 350 000 тг",
+    "description": "Начальная позиция аналитика. Написание SQL-запросов, построение отчётов и дашбордов. Основы Python (pandas), Excel, визуализация. Обучение под руководством наставника. Подходит выпускникам вузов.",
+    "url": "https://hh.kz/vacancy/1000046"
+  },
+  {
+    "title": "DevOps Engineer (Middle)",
+    "company": "Freedom Finance",
+    "location": "Астана",
+    "salary": "от 800 000 тг",
+    "description": "Поддержка и развитие CI/CD, автоматизация инфраструктуры. Docker, Kubernetes, GitLab CI, Ansible. Мониторинг (Prometheus, Grafana), работа с Linux. Скриптинг на Bash/Python, облачные платформы.",
+    "url": "https://hh.kz/vacancy/1000047"
+  },
+  {
+    "title": "Mobile QA Engineer",
+    "company": "Beeline Kazakhstan",
+    "location": "Алматы",
+    "salary": "от 450 000 тг",
+    "description": "Тестирование мобильных приложений (iOS, Android). Функциональное и регрессионное тестирование, работа с устройствами и эмуляторами. Написание тест-кейсов, баг-репортов. Базовая автоматизация (Appium) приветствуется.",
+    "url": "https://hh.kz/vacancy/1000048"
+  },
+  {
+    "title": "System Analyst",
+    "company": "Jusan Bank",
+    "location": "Алматы",
+    "salary": "от 650 000 тг",
+    "description": "Анализ и проектирование IT-систем. Написание технических спецификаций, проектирование API, моделирование данных (UML). Взаимодействие между бизнесом и разработкой. Знание SQL, REST, опыт в банковской сфере.",
+    "url": "https://hh.kz/vacancy/1000049"
+  },
+  {
+    "title": "Fullstack Developer (Python + Vue)",
+    "company": "Chocofamily",
+    "location": "Алматы",
+    "salary": "от 850 000 тг",
+    "description": "Полный цикл разработки веб-приложений: backend на Python (FastAPI) и frontend на Vue.js. PostgreSQL, REST API, Docker. Знание JavaScript, TypeScript, Git. Умение работать самостоятельно от идеи до релиза.",
+    "url": "https://hh.kz/vacancy/1000050"
+  }
+]

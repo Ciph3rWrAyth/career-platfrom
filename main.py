@@ -10,6 +10,10 @@ from pydantic import BaseModel, EmailStr
 from fastapi import FastAPI, Depends, HTTPException
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from sqlalchemy.orm import Session
+from sqlalchemy import or_
+
+from apscheduler.schedulers.background import BackgroundScheduler
+from vacancies_import import refresh_vacancies
 
 app = FastAPI(
     title="Career Platform API",
@@ -23,6 +27,11 @@ if not SECRET_KEY:
     raise RuntimeError("SECRET_KEY не задан. Проверь .env файл")
 security = HTTPBearer()
 ALGORITHM = "HS256"
+
+scheduler = BackgroundScheduler()
+interval_hours = int(os.getenv("SCHEDULER_INTERVAL_HOURS", 24))
+scheduler.add_job(refresh_vacancies, "interval", hours=interval_hours)
+scheduler.start()
 
 
 def create_token(email: str):
@@ -60,6 +69,7 @@ class VacancyCreate(BaseModel):
     salary: str | None = None
     description: str
     url: str | None = None
+    source: str | None = None
 
 
 class VacancyOut(VacancyCreate):
@@ -91,8 +101,28 @@ def create_vacancy(vacancy: VacancyCreate, db: Session = Depends(get_db)):
 
 
 @app.get("/vacancies", response_model=list[VacancyOut])
-def list_vacancies(db: Session = Depends(get_db)):
-    return db.query(Vacancy).all()
+def list_vacancies(
+    search: str | None = None,
+    location: str | None = None,
+    source: str | None = None,
+    skip: int = 0,
+    limit: int = 20,
+    db: Session = Depends(get_db),
+):
+    query = db.query(Vacancy)
+    if search:
+        query = query.filter(
+            or_(
+                Vacancy.title.ilike(f"%{search}%"),
+                Vacancy.description.ilike(f"%{search}%"),
+            )
+        )
+    if location:
+        query = query.filter(Vacancy.location.ilike(f"%{location}%"))
+    if source:
+        query = query.filter(Vacancy.source == source)
+
+    return query.offset(skip).limit(limit).all()
 
 
 @app.get("/vacancies/{vacancy_id}", response_model=VacancyOut)
