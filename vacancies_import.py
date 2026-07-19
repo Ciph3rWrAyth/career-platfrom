@@ -68,7 +68,7 @@ def load_from_hh(
         )
         response.raise_for_status()
     except requests.RequestException as e:
-        print(f"Ошибка запроса к hh: {e}")
+        logger.error(f"Ошибка запроса к hh: {e}")
         return []
     items = response.json().get("items", [])
 
@@ -81,7 +81,7 @@ def load_from_hh(
                 timeout=10,
             ).json()
         except requests.RequestException as e:
-            logger.warning(f"Пропускаю вакансию {item ["id"]}: {e}")
+            logger.warning(f"Пропускаю вакансию {item["id"]}: {e}")
             continue
 
         description = BeautifulSoup(

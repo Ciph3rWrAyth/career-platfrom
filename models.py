@@ -6,6 +6,7 @@ from sqlalchemy import Text
 class User(Base):
     __tablename__ = "users"
     id = Column(Integer, primary_key=True, index=True)
+    full_name = Column(String, nullable=True)
     email = Column(String, unique=True, index=True)
     hashed_password = Column(String)
     skills = Column(String, nullable=True)

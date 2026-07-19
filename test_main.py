@@ -33,7 +33,7 @@ def test_health():
 def test_register_and_login():
     client.post("/register", json={"email": "test@example.com", "password": "1234"})
     response = client.post(
-      "/login", json={"email": "test@example.com","password":"1234"}
+        "/login", json={"email": "test@example.com", "password": "1234"}
     )
     assert response.status_code == 200
     assert "access_token" in response.json()
