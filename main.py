@@ -61,6 +61,8 @@ class UserRegister(BaseModel):
     email: EmailStr
     password: str
 
+class SkillsUpdate(BaseModel):
+    skills:str
 
 class VacancyCreate(BaseModel):
     title: str
@@ -174,6 +176,8 @@ def register(user: UserRegister, db: Session = Depends(get_db)):
     }
 
 
+
+
 @app.post("/login")
 def login(user: UserRegister, db: Session = Depends(get_db)):
     db_user = db.query(User).filter(User.email == user.email).first()
@@ -209,4 +213,19 @@ def get_current_user(
 
 @app.get("/me")
 def read_me(current_user: User = Depends(get_current_user)):
-    return {"id": current_user.id, "email": current_user.email}
+    return {"id": current_user.id, "email": current_user.email, "skills": current_user.skills}
+
+
+@app.put("/me/skills")
+def update_skills(
+    data: SkillsUpdate,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    current_user.skills = data.skills
+    db.commit()
+    return {
+        "id": current_user.id,
+        "email": current_user.email,
+        "skills": current_user.skills,
+        }
