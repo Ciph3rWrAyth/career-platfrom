@@ -15,6 +15,8 @@ from sqlalchemy import or_
 from apscheduler.schedulers.background import BackgroundScheduler
 from vacancies_import import refresh_vacancies
 
+from logging_config import logger
+
 app = FastAPI(
     title="Career Platform API",
     description="Интеллектуальная платформа карьерного роста — бэкенд дипломной работы",
@@ -32,6 +34,7 @@ scheduler = BackgroundScheduler()
 interval_hours = int(os.getenv("SCHEDULER_INTERVAL_HOURS", 24))
 scheduler.add_job(refresh_vacancies, "interval", hours=interval_hours)
 scheduler.start()
+logger.info(f"Приложение запущено, планировщик активен (интервал {interval_hours}ч)")
 
 
 def create_token(email: str):
@@ -40,6 +43,24 @@ def create_token(email: str):
         "exp": datetime.now(timezone.utc) + timedelta(hours=1),
     }
     return jwt.encode(payload, SECRET_KEY, algorithm=ALGORITHM)
+
+
+def get_current_user(
+    credentials: HTTPAuthorizationCredentials = Depends(security),
+    db: Session = Depends(get_db),
+):
+    token = credentials.credentials
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        email = payload.get("sub")
+    except jwt.ExpiredSignatureError:
+        raise HTTPException(status_code=401, detail="Токен просрочен, войдите заново")
+    except jwt.InvalidTokenError:
+        raise HTTPException(status_code=401, detail="Неверный токен")
+    user = db.query(User).filter(User.email == email).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="Пользователь не найден")
+    return user
 
 
 @app.get("/")
@@ -87,7 +108,11 @@ def get_vacancy_or_404(vacancy_id: int, db: Session = Depends(get_db)) -> Vacanc
 
 
 @app.post("/vacancies", response_model=VacancyOut)
-def create_vacancy(vacancy: VacancyCreate, db: Session = Depends(get_db)):
+def create_vacancy(
+    vacancy: VacancyCreate, 
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
     new_vacancy = Vacancy(
         title=vacancy.title,
         company=vacancy.company,
@@ -137,6 +162,7 @@ def update_vacancy(
     vacancy_data: VacancyCreate,
     vacancy: Vacancy = Depends(get_vacancy_or_404),
     db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
 ):
     vacancy.title = vacancy_data.title
     vacancy.company = vacancy_data.company
@@ -153,6 +179,7 @@ def update_vacancy(
 def delete_vacancy(
     vacancy: Vacancy = Depends(get_vacancy_or_404),
     db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
 ):
     db.delete(vacancy)
     db.commit()
@@ -191,24 +218,6 @@ def login(user: UserRegister, db: Session = Depends(get_db)):
         "access_token": token,
         "token_type": "bearer",
     }
-
-
-def get_current_user(
-    credentials: HTTPAuthorizationCredentials = Depends(security),
-    db: Session = Depends(get_db),
-):
-    token = credentials.credentials
-    try:
-        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        email = payload.get("sub")
-    except jwt.ExpiredSignatureError:
-        raise HTTPException(status_code=401, detail="Токен просрочен, войдите заново")
-    except jwt.InvalidTokenError:
-        raise HTTPException(status_code=401, detail="Неверный токен")
-    user = db.query(User).filter(User.email == email).first()
-    if not user:
-        raise HTTPException(status_code=404, detail="Пользователь не найден")
-    return user
 
 
 @app.get("/me")

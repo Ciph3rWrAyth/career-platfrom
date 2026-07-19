@@ -4,12 +4,15 @@ import time
 
 import json
 import requests
+from logging_config import logger
 from bs4 import BeautifulSoup
 from database import SessionLocal
 from models import Vacancy
+from datetime import datetime, timedelta, timezone
 
 
 def save_vacancies(items: list[dict], db) -> tuple[int, int]:
+    now = datetime.now(timezone.utc)
     added = 0
     updated = 0
     for item in items:
@@ -17,9 +20,12 @@ def save_vacancies(items: list[dict], db) -> tuple[int, int]:
         if existing:
             for key, value in item.items():
                 setattr(existing, key, value)
+            existing.last_seen = now
             updated += 1
         else:
-            db.add(Vacancy(**item))
+            vacancy = Vacancy(**item)
+            vacancy.last_seen = now
+            db.add(vacancy)
             added += 1
     db.commit()
     return added, updated
@@ -75,7 +81,7 @@ def load_from_hh(
                 timeout=10,
             ).json()
         except requests.RequestException as e:
-            print(f"Пропускаю вакансий {item['id']}: {e}")
+            logger.warning(f"Пропускаю вакансию {item ["id"]}: {e}")
             continue
 
         description = BeautifulSoup(
@@ -101,10 +107,21 @@ def load_from_hh(
 def refresh_vacancies():
     db = SessionLocal()
     added, updated = save_vacancies(load_from_hh(per_page=20), db)
-    print(
-        f"[Планировщик] новых вакансий из hh добавлено: {added}, обновлено: {updated}"
-    )
+    removed = remove_stale_vacancies(db, days=7)
+    logger.info(f"Планировщик: добавлено {added}, обновлено {updated}, удалено устаревших {removed}")
     db.close()
+
+
+def remove_stale_vacancies(db, days: int = 7) -> int:
+    cutoff = datetime.now(timezone.utc) - timedelta(days=days)
+    stale = db.query(Vacancy).filter(
+        Vacancy.source == "hh",
+        Vacancy.last_seen < cutoff,
+    )
+    count = stale.count()
+    stale.delete(synchronize_session=False)
+    db.commit()
+    return count
 
 
 if __name__ == "__main__":
@@ -113,10 +130,13 @@ if __name__ == "__main__":
     added_file, updated_file = save_vacancies(
         load_from_file("vacancies_sample.json"), db
     )
-    print(f"Из файла добавлено: {added_file}, обновлено {updated_file}")
+    logger.info(f"Из файла добавлено: {added_file}, обновлено {updated_file}")
 
     added_hh, updated_hh = save_vacancies(load_from_hh(), db)
-    print(f"Из hh добавлено: {added_hh}, обновленно {updated_hh}")
+    logger.info(f"Из hh добавлено: {added_hh}, обновленно {updated_hh}")
+
+    removed = remove_stale_vacancies(db, days=7)
+    logger.info(f"Удалено устаревших: {removed}")
 
     db.close()
-    print("Готово!")
+    logger.info("Готово!")

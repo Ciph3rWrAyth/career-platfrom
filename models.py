@@ -1,7 +1,6 @@
-from sqlalchemy import Column, Integer, String
+from sqlalchemy import Column, Integer, String, DateTime 
 from database import Base
 from sqlalchemy import Text
-
 
 class User(Base):
     __tablename__ = "users"
@@ -21,3 +20,4 @@ class Vacancy(Base):
     description = Column(Text)
     url = Column(String, nullable=True)
     source = Column(String, nullable=True)
+    last_seen = Column(DateTime(timezone=True), nullable=True)
