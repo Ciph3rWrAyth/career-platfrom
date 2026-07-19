@@ -108,7 +108,9 @@ def refresh_vacancies():
     db = SessionLocal()
     added, updated = save_vacancies(load_from_hh(per_page=20), db)
     removed = remove_stale_vacancies(db, days=7)
-    logger.info(f"Планировщик: добавлено {added}, обновлено {updated}, удалено устаревших {removed}")
+    logger.info(
+        f"Планировщик: добавлено {added}, обновлено {updated}, удалено устаревших {removed}"
+    )
     db.close()
 
 

@@ -1,21 +1,12 @@
 import os
-import jwt
-from datetime import datetime, timedelta, timezone
 
-from database import engine, Base, get_db
-from models import User, Vacancy
-import bcrypt
-
-from pydantic import BaseModel, EmailStr
-from fastapi import FastAPI, Depends, HTTPException
-from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
-from sqlalchemy.orm import Session
-from sqlalchemy import or_
-
+from fastapi import FastAPI
 from apscheduler.schedulers.background import BackgroundScheduler
-from vacancies_import import refresh_vacancies
 
+from database import engine, Base
+from vacancies_import import refresh_vacancies
 from logging_config import logger
+from routers import vacancies, users
 
 app = FastAPI(
     title="Career Platform API",
@@ -24,11 +15,6 @@ app = FastAPI(
 )
 
 Base.metadata.create_all(bind=engine)
-SECRET_KEY = os.getenv("SECRET_KEY")
-if not SECRET_KEY:
-    raise RuntimeError("SECRET_KEY не задан. Проверь .env файл")
-security = HTTPBearer()
-ALGORITHM = "HS256"
 
 scheduler = BackgroundScheduler()
 interval_hours = int(os.getenv("SCHEDULER_INTERVAL_HOURS", 24))
@@ -36,31 +22,8 @@ scheduler.add_job(refresh_vacancies, "interval", hours=interval_hours)
 scheduler.start()
 logger.info(f"Приложение запущено, планировщик активен (интервал {interval_hours}ч)")
 
-
-def create_token(email: str):
-    payload = {
-        "sub": email,
-        "exp": datetime.now(timezone.utc) + timedelta(hours=1),
-    }
-    return jwt.encode(payload, SECRET_KEY, algorithm=ALGORITHM)
-
-
-def get_current_user(
-    credentials: HTTPAuthorizationCredentials = Depends(security),
-    db: Session = Depends(get_db),
-):
-    token = credentials.credentials
-    try:
-        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        email = payload.get("sub")
-    except jwt.ExpiredSignatureError:
-        raise HTTPException(status_code=401, detail="Токен просрочен, войдите заново")
-    except jwt.InvalidTokenError:
-        raise HTTPException(status_code=401, detail="Неверный токен")
-    user = db.query(User).filter(User.email == email).first()
-    if not user:
-        raise HTTPException(status_code=404, detail="Пользователь не найден")
-    return user
+app.include_router(vacancies.router)
+app.include_router(users.router)
 
 
 @app.get("/")
@@ -71,170 +34,3 @@ def read_root():
 @app.get("/health")
 def health_check():
     return {"status": "ok"}
-
-
-@app.get("/hello/{name}")
-def say_hello(name: str):
-    return {"message": f"Привет, {name}! Добро пожаловать на платформу."}
-
-
-class UserRegister(BaseModel):
-    email: EmailStr
-    password: str
-
-class SkillsUpdate(BaseModel):
-    skills:str
-
-class VacancyCreate(BaseModel):
-    title: str
-    company: str
-    location: str
-    salary: str | None = None
-    description: str
-    url: str | None = None
-    source: str | None = None
-
-
-class VacancyOut(VacancyCreate):
-    id: int
-    model_config = {"from_attributes": True}
-
-
-def get_vacancy_or_404(vacancy_id: int, db: Session = Depends(get_db)) -> Vacancy:
-    vacancy = db.query(Vacancy).filter(Vacancy.id == vacancy_id).first()
-    if not vacancy:
-        raise HTTPException(status_code=404, detail="Вакансия не найдена")
-    return vacancy
-
-
-@app.post("/vacancies", response_model=VacancyOut)
-def create_vacancy(
-    vacancy: VacancyCreate, 
-    db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user),
-):
-    new_vacancy = Vacancy(
-        title=vacancy.title,
-        company=vacancy.company,
-        location=vacancy.location,
-        salary=vacancy.salary,
-        description=vacancy.description,
-        url=vacancy.url,
-    )
-    db.add(new_vacancy)
-    db.commit()
-    db.refresh(new_vacancy)
-    return new_vacancy
-
-
-@app.get("/vacancies", response_model=list[VacancyOut])
-def list_vacancies(
-    search: str | None = None,
-    location: str | None = None,
-    source: str | None = None,
-    skip: int = 0,
-    limit: int = 20,
-    db: Session = Depends(get_db),
-):
-    query = db.query(Vacancy)
-    if search:
-        query = query.filter(
-            or_(
-                Vacancy.title.ilike(f"%{search}%"),
-                Vacancy.description.ilike(f"%{search}%"),
-            )
-        )
-    if location:
-        query = query.filter(Vacancy.location.ilike(f"%{location}%"))
-    if source:
-        query = query.filter(Vacancy.source == source)
-
-    return query.offset(skip).limit(limit).all()
-
-
-@app.get("/vacancies/{vacancy_id}", response_model=VacancyOut)
-def get_vacancy(vacancy: Vacancy = Depends(get_vacancy_or_404)):
-    return vacancy
-
-
-@app.put("/vacancies/{vacancy_id}", response_model=VacancyOut)
-def update_vacancy(
-    vacancy_data: VacancyCreate,
-    vacancy: Vacancy = Depends(get_vacancy_or_404),
-    db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user),
-):
-    vacancy.title = vacancy_data.title
-    vacancy.company = vacancy_data.company
-    vacancy.location = vacancy_data.location
-    vacancy.salary = vacancy_data.salary
-    vacancy.description = vacancy_data.description
-    vacancy.url = vacancy_data.url
-    db.commit()
-    db.refresh(vacancy)
-    return vacancy
-
-
-@app.delete("/vacancies/{vacancy_id}")
-def delete_vacancy(
-    vacancy: Vacancy = Depends(get_vacancy_or_404),
-    db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user),
-):
-    db.delete(vacancy)
-    db.commit()
-    return {"message": "Вакансия удалена"}
-
-
-@app.post("/register")
-def register(user: UserRegister, db: Session = Depends(get_db)):
-    existing_user = db.query(User).filter(User.email == user.email).first()
-    if existing_user:
-        raise HTTPException(status_code=400, detail="Этот email уже зарегистрирован")
-
-    hashed = bcrypt.hashpw(user.password.encode(), bcrypt.gensalt()).decode()
-    new_user = User(email=user.email, hashed_password=hashed)
-    db.add(new_user)
-    db.commit()
-    db.refresh(new_user)
-    return {
-        "message": f"Пользователь { user.email } принят на регистрацию!",
-        "id": new_user.id,
-    }
-
-
-
-
-@app.post("/login")
-def login(user: UserRegister, db: Session = Depends(get_db)):
-    db_user = db.query(User).filter(User.email == user.email).first()
-    if not db_user or not bcrypt.checkpw(
-        user.password.encode(), db_user.hashed_password.encode()
-    ):
-        raise HTTPException(status_code=401, detail="Неверный email или пароль")
-    token = create_token(user.email)
-    return {
-        "message": f"С возвращением, { user.email }!",
-        "access_token": token,
-        "token_type": "bearer",
-    }
-
-
-@app.get("/me")
-def read_me(current_user: User = Depends(get_current_user)):
-    return {"id": current_user.id, "email": current_user.email, "skills": current_user.skills}
-
-
-@app.put("/me/skills")
-def update_skills(
-    data: SkillsUpdate,
-    current_user: User = Depends(get_current_user),
-    db: Session = Depends(get_db)
-):
-    current_user.skills = data.skills
-    db.commit()
-    return {
-        "id": current_user.id,
-        "email": current_user.email,
-        "skills": current_user.skills,
-        }

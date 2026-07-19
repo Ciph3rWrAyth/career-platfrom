@@ -3,3 +3,5 @@ __pycache__/
 *.pyc
 .env
 app.log
+test.db
+.pytest_cache/
