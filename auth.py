@@ -20,7 +20,7 @@ security = HTTPBearer()
 def create_token(email: str):
     payload = {
         "sub": email,
-        "exp": datetime.now(timezone.utc) + timedelta(hours=1),
+        "exp": datetime.now(timezone.utc) + timedelta(hours=8),
     }
     return jwt.encode(payload, SECRET_KEY, algorithm=ALGORITHM)
 
