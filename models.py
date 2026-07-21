@@ -10,6 +10,7 @@ class User(Base):
     email = Column(String, unique=True, index=True)
     hashed_password = Column(String)
     skills = Column(String, nullable=True)
+    resume_text = Column(Text, nullable=True)
 
 
 class Vacancy(Base):

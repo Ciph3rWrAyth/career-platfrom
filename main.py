@@ -17,13 +17,16 @@ interval_hours = int(os.getenv("SCHEDULER_INTERVAL_HOURS", 24))
 async def lifespan(app: FastAPI):
     scheduler.add_job(refresh_vacancies, "interval", hours=interval_hours)
     scheduler.start()
-    logger.info(f"Приложение запущено, планировщик активен (интервал {interval_hours}ч)")
+    logger.info(
+        f"Приложение запущено, планировщик активен (интервал {interval_hours}ч)"
+    )
     yield
     scheduler.shutdown()
     logger.info("Приложение остановлено, планировщик выключен")
-    
+
 
 app = FastAPI(
+    lifespan=lifespan,
     title="Career Platform API",
     description="Интеллектуальная платформа карьерного роста — бэкенд дипломной работы",
     version="0.1.0",
@@ -32,6 +35,7 @@ app = FastAPI(
 
 app.include_router(vacancies.router)
 app.include_router(users.router)
+
 
 @app.get("/")
 def read_root():

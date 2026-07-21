@@ -53,7 +53,9 @@ def format_salary(salary: dict | None) -> str | None:
 
 
 def load_from_hh(
-    text: str = "Python", area: int = 40, per_page: int = 20
+    text: str = "Python",
+    area: int = 40,
+    per_page: int = 20,
 ) -> list[dict]:
     headers = {"User-Agent": "Career Growth Platform (sudukow7@gmail.com)"}
     token = os.getenv("HH_ACCESS_TOKEN")
@@ -104,9 +106,17 @@ def load_from_hh(
     return result
 
 
+def load_all_from_hh() -> list[dict]:
+    queries = ["Python", "Java", "JavaScript", "DevOps", "Data Analyst", "QA"]
+    result = []
+    for query in queries:
+        result.extend(load_from_hh(text=query, per_page=10))
+    return result
+
+
 def refresh_vacancies():
     db = SessionLocal()
-    added, updated = save_vacancies(load_from_hh(per_page=20), db)
+    added, updated = save_vacancies(load_all_from_hh(per_page=20), db)
     removed = remove_stale_vacancies(db, days=7)
     logger.info(
         f"Планировщик: добавлено {added}, обновлено {updated}, удалено устаревших {removed}"
@@ -134,7 +144,7 @@ if __name__ == "__main__":
     )
     logger.info(f"Из файла добавлено: {added_file}, обновлено {updated_file}")
 
-    added_hh, updated_hh = save_vacancies(load_from_hh(), db)
+    added_hh, updated_hh = save_vacancies(load_all_from_hh(), db)
     logger.info(f"Из hh добавлено: {added_hh}, обновленно {updated_hh}")
 
     removed = remove_stale_vacancies(db, days=7)
