@@ -5,9 +5,8 @@ from sqlalchemy import or_
 from database import get_db
 from models import User, Vacancy
 from schemas import VacancyCreate, VacancyOut
-from auth import get_current_user
 
-from auth import get_current_user, require_admin
+from auth import require_admin
 
 router = APIRouter(prefix="/vacancies", tags=["vacancies"])
 
