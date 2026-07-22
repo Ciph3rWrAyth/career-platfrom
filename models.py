@@ -11,6 +11,7 @@ class User(Base):
     hashed_password = Column(String)
     skills = Column(String, nullable=True)
     resume_text = Column(Text, nullable=True)
+    role = Column(String, nullable=False, server_default="user")
 
 
 class Vacancy(Base):

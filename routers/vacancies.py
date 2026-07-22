@@ -7,6 +7,8 @@ from models import User, Vacancy
 from schemas import VacancyCreate, VacancyOut
 from auth import get_current_user
 
+from auth import get_current_user, require_admin
+
 router = APIRouter(prefix="/vacancies", tags=["vacancies"])
 
 
@@ -21,7 +23,7 @@ def get_vacancy_or_404(vacancy_id: int, db: Session = Depends(get_db)) -> Vacanc
 def create_vacancy(
     vacancy: VacancyCreate,
     db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user),
+    current_user: User = Depends(require_admin),
 ):
     new_vacancy = Vacancy(
         title=vacancy.title,
@@ -72,7 +74,7 @@ def update_vacancy(
     vacancy_data: VacancyCreate,
     vacancy: Vacancy = Depends(get_vacancy_or_404),
     db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user),
+    current_user: User = Depends(require_admin),
 ):
     vacancy.title = vacancy_data.title
     vacancy.company = vacancy_data.company
@@ -89,7 +91,7 @@ def update_vacancy(
 def delete_vacancy(
     vacancy: Vacancy = Depends(get_vacancy_or_404),
     db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user),
+    current_user: User = Depends(require_admin),
 ):
     db.delete(vacancy)
     db.commit()
