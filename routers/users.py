@@ -3,12 +3,14 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
 from database import get_db
-from models import User
 from schemas import UserRegister, SkillsUpdate
 from auth import create_token, get_current_user
 
 from fastapi import UploadFile, File
 from pypdf import PdfReader
+
+from models import User, Vacancy
+from matching import find_matches
 
 router = APIRouter(tags=["users"])
 
@@ -90,3 +92,26 @@ def upload_resume(
         "chars": len(text),
         "preview": text[:200],
     }
+
+
+@router.get("/me/matches")
+def get_matches(
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    if not current_user.skills:
+        raise HTTPException(status_code=400, detail="Неверные данные у пользователя")
+    vacancies = db.query(Vacancy).all()
+    pairs = find_matches(current_user.skills, vacancies)
+    results = []
+    for v, score in pairs:
+        results.append(
+            {
+                "score": round(float(score), 3),
+                "title": v.title,
+                "company": v.company,
+                "location": v.location,
+                "url": v.url,
+            }
+        )
+    return results
