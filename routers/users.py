@@ -98,11 +98,18 @@ def upload_resume(
 def get_matches(
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
+    source: str = "skills",
 ):
-    if not current_user.skills:
-        raise HTTPException(status_code=400, detail="Неверные данные у пользователя")
+    if source == "resume":
+        text = current_user.resume_text
+    else:
+        text = current_user.skills
+    if not text:
+        raise HTTPException(
+            status_code=400, detail="нет данных: заполни навыки или загрузи резюме"
+        )
     vacancies = db.query(Vacancy).all()
-    pairs = find_matches(current_user.skills, vacancies)
+    pairs = find_matches(text, vacancies)
     results = []
     for v, score in pairs:
         results.append(

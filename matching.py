@@ -4,7 +4,6 @@ os.environ["HF_HUB_OFFLINE"] = "1"
 
 from sentence_transformers import SentenceTransformer
 
-
 model = SentenceTransformer("paraphrase-multilingual-MiniLM-L12-v2")
 
 
