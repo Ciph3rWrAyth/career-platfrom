@@ -2,11 +2,11 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from sqlalchemy import or_
 
-from database import get_db
-from models import User, Vacancy
-from schemas import VacancyCreate, VacancyOut
+from app.database import get_db
+from app.models import User, Vacancy
+from app.schemas import VacancyCreate, VacancyOut
 
-from auth import require_admin
+from app.auth import require_admin
 
 router = APIRouter(prefix="/vacancies", tags=["vacancies"])
 

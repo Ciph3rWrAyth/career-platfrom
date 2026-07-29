@@ -2,15 +2,15 @@ import bcrypt
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
-from database import get_db
-from schemas import UserRegister, SkillsUpdate
-from auth import create_token, get_current_user
+from app.database import get_db
+from app.schemas import UserRegister, SkillsUpdate
+from app.auth import create_token, get_current_user
 
 from fastapi import UploadFile, File
 from pypdf import PdfReader
 
-from models import User, Vacancy
-from matching import find_matches
+from app.models import User, Vacancy
+from app.services.matching import find_matches
 
 router = APIRouter(tags=["users"])
 

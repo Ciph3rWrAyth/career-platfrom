@@ -4,10 +4,10 @@ import time
 
 import json
 import requests
-from logging_config import logger
+from app.logging_config import logger
 from bs4 import BeautifulSoup
-from database import SessionLocal
-from models import Vacancy
+from app.database import SessionLocal
+from app.models import Vacancy
 from datetime import datetime, timedelta, timezone
 
 

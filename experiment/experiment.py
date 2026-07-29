@@ -1,6 +1,6 @@
-from database import SessionLocal
-from models import Vacancy
-from matching import find_matches
+from app.database import SessionLocal
+from app.models import Vacancy
+from app.services.matching import find_matches
 
 db = SessionLocal()
 vacancies = db.query(Vacancy).all()

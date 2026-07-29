@@ -5,9 +5,9 @@ from apscheduler.schedulers.background import BackgroundScheduler
 
 
 from contextlib import asynccontextmanager
-from vacancies_import import refresh_vacancies
-from logging_config import logger
-from routers import vacancies, users
+from app.services.vacancies_import import refresh_vacancies
+from app.logging_config import logger
+from app.routers import vacancies, users
 
 scheduler = BackgroundScheduler()
 interval_hours = int(os.getenv("SCHEDULER_INTERVAL_HOURS", 24))
