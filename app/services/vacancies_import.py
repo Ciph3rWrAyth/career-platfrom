@@ -115,9 +115,11 @@ def load_all_from_hh() -> list[dict]:
 
 
 def refresh_vacancies():
+    from app.services.matching import clear_cache
     db = SessionLocal()
-    added, updated = save_vacancies(load_all_from_hh(per_page=20), db)
+    added, updated = save_vacancies(load_all_from_hh(), db)
     removed = remove_stale_vacancies(db, days=7)
+    clear_cache()
     logger.info(
         f"Планировщик: добавлено {added}, обновлено {updated}, удалено устаревших {removed}"
     )

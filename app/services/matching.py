@@ -28,3 +28,7 @@ def find_matches(skills, vacancies, top_n=10):
     pairs = list(zip(vacancies, scores))
     pairs.sort(key=lambda pair: float(pair[1]), reverse=True)
     return pairs[:top_n]
+
+
+def clear_cache():
+    _vector_cache.clear()
