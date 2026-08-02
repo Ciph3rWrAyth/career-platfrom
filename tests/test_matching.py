@@ -35,9 +35,9 @@ def test_clear_cache_empties():
       make_vacancy(1, "Таксист", "Доставляет людей от точки А до точки Б"),
       make_vacancy(2, "C#-разработчик", "Пишет инженерию через С и работает через Visual"),
       make_vacancy(3, "Тестировщик", "Тестирует сервисы на проф пригодность"),
-      make_vacancy(4, "Водител-автобуса", "Водить автобус")
+      make_vacancy(4, "Водитель-автобуса", "Водить автобус")
    ] 
-   result = find_matches("C#, Visual", vacancies, top_n=2)
+   find_matches("C#, Visual", vacancies, top_n=2)
 
    assert len(_vector_cache) > 0
    clear_cache()
