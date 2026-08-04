@@ -11,6 +11,7 @@ from pypdf import PdfReader
 
 from app.models import User, Vacancy
 from app.services.matching import find_matches
+from app.schemas import MatchOut
 
 router = APIRouter(tags=["users"])
 
@@ -94,7 +95,7 @@ def upload_resume(
     }
 
 
-@router.get("/me/matches")
+@router.get("/me/matches", response_model=list[MatchOut])
 def get_matches(
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
@@ -110,15 +111,4 @@ def get_matches(
         )
     vacancies = db.query(Vacancy).all()
     pairs = find_matches(text, vacancies)
-    results = []
-    for v, score in pairs:
-        results.append(
-            {
-                "score": round(float(score), 3),
-                "title": v.title,
-                "company": v.company,
-                "location": v.location,
-                "url": v.url,
-            }
-        )
-    return results
+    return [{"score": round(float(score), 3), "vacancy": v} for v, score in pairs]

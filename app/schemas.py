@@ -23,3 +23,8 @@ class VacancyCreate(BaseModel):
 class VacancyOut(VacancyCreate):
     id: int
     model_config = {"from_attributes": True}
+
+
+class MatchOut(BaseModel):
+    score: float
+    vacancy: VacancyOut
