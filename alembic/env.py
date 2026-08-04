@@ -15,9 +15,9 @@ if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
 # Наши модели и адрес базы (из .env через database.py).
-from app.database import Base # noqa: E402
+from app.database import Base  # noqa: E402
 from app.core.config import settings  # noqa: E402
-import app.models # noqa: F401, E402 — импорт регистрирует таблицы в Base.metadata
+import app.models  # noqa: F401, E402 — импорт регистрирует таблицы в Base.metadata
 
 # Адрес базы берём из .env, а не из alembic.ini (там пароль светить нельзя).
 config.set_main_option("sqlalchemy.url", settings.database_url)

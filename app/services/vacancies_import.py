@@ -15,8 +15,8 @@ from app.core.config import settings
 def save_vacancies(items: list[dict], db) -> tuple[int, int]:
     unique = {}
     for item in items:
-        unique[item["url"]] = item 
-        items = list(unique.values())
+        unique[item["url"]] = item
+    items = list(unique.values())
     now = datetime.now(timezone.utc)
     added = 0
     updated = 0
@@ -121,7 +121,6 @@ def load_all_from_hh() -> list[dict]:
 
 def refresh_vacancies():
     from app.services.matching import clear_cache
-
     db = SessionLocal()
     added, updated = save_vacancies(load_all_from_hh(), db)
     removed = remove_stale_vacancies(db, days=7)
