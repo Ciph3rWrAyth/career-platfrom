@@ -13,6 +13,10 @@ from app.core.config import settings
 
 
 def save_vacancies(items: list[dict], db) -> tuple[int, int]:
+    unique = {}
+    for item in items:
+        unique[item["url"]] = item 
+        items = list(unique.values())
     now = datetime.now(timezone.utc)
     added = 0
     updated = 0

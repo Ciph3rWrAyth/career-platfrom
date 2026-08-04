@@ -22,6 +22,6 @@ class Vacancy(Base):
     location = Column(String)
     salary = Column(String, nullable=True)
     description = Column(Text)
-    url = Column(String, nullable=True)
+    url = Column(String, nullable=True, unique=True, index=True)
     source = Column(String, nullable=True)
     last_seen = Column(DateTime(timezone=True), nullable=True)
