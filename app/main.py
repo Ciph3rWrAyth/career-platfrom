@@ -1,5 +1,3 @@
-import os
-
 from fastapi import FastAPI
 from apscheduler.schedulers.background import BackgroundScheduler
 
@@ -9,8 +7,10 @@ from app.services.vacancies_import import refresh_vacancies
 from app.logging_config import logger
 from app.routers import vacancies, users
 
+from app.core.config import settings
+
 scheduler = BackgroundScheduler()
-interval_hours = int(os.getenv("SCHEDULER_INTERVAL_HOURS", 24))
+interval_hours = settings.scheduler_interval_hours
 
 
 @asynccontextmanager

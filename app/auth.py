@@ -1,4 +1,3 @@
-import os
 import jwt
 from datetime import datetime, timedelta, timezone
 
@@ -9,9 +8,9 @@ from sqlalchemy.orm import Session
 from app.database import get_db
 from app.models import User
 
-SECRET_KEY = os.getenv("SECRET_KEY")
-if not SECRET_KEY:
-    raise RuntimeError("SECRET_KEY не задан. Проверь .env файл")
+from app.core.config import settings
+
+SECRET_KEY = settings.secret_key
 
 ALGORITHM = "HS256"
 security = HTTPBearer()

@@ -1,4 +1,3 @@
-import os
 import time
 
 
@@ -9,6 +8,8 @@ from bs4 import BeautifulSoup
 from app.database import SessionLocal
 from app.models import Vacancy
 from datetime import datetime, timedelta, timezone
+
+from app.core.config import settings
 
 
 def save_vacancies(items: list[dict], db) -> tuple[int, int]:
@@ -58,7 +59,7 @@ def load_from_hh(
     per_page: int = 20,
 ) -> list[dict]:
     headers = {"User-Agent": "Career Growth Platform (sudukow7@gmail.com)"}
-    token = os.getenv("HH_ACCESS_TOKEN")
+    token = settings.hh_access_token
     if token:
         headers["Authorization"] = f"Bearer {token}"
     try:
@@ -116,6 +117,7 @@ def load_all_from_hh() -> list[dict]:
 
 def refresh_vacancies():
     from app.services.matching import clear_cache
+
     db = SessionLocal()
     added, updated = save_vacancies(load_all_from_hh(), db)
     removed = remove_stale_vacancies(db, days=7)

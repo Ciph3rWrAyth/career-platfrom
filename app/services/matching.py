@@ -2,7 +2,7 @@ import os
 
 os.environ["HF_HUB_OFFLINE"] = "1"
 
-import numpy as np 
+import numpy as np
 from sentence_transformers import SentenceTransformer
 
 model = SentenceTransformer("paraphrase-multilingual-MiniLM-L12-v2")
@@ -10,10 +10,9 @@ model = SentenceTransformer("paraphrase-multilingual-MiniLM-L12-v2")
 _vector_cache = {}
 
 
-
 def _get_vacancy_vectors(vacancies):
     missing = [v for v in vacancies if v.id not in _vector_cache]
-    if  missing:
+    if missing:
         new_vectors = model.encode([v.description or "" for v in missing])
         for v, vec in zip(missing, new_vectors):
             _vector_cache[v.id] = vec
