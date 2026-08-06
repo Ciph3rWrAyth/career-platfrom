@@ -63,3 +63,31 @@ def test_list_vacancies_open():
     response = client.get("/vacancies")
     assert response.status_code == 200
     assert isinstance(response.json(), list)
+
+
+def register_and_get_token(email, password="1234"):
+    client.post("/register", json={"email": email, "password": password})
+    resp = client.post("/login", json={"email": email, "password": password})
+    return resp.json()["access_token"]
+
+
+def test_me_requires_auth():
+    resp = client.get("/me")
+    assert resp.status_code in (401,403)
+
+
+def test_me_returns_current_user():
+    token = register_and_get_token("me@example.com")
+    resp = client.get("/me", headers = {"Authorization": f"Bearer {token}"})
+    assert resp.status_code == 200
+    assert resp.json()["email"] == "me@example.com"
+
+
+def test_update_skills():
+    token = register_and_get_token("skills@example.com")
+    headers = {"Authorization": f"Bearer {token}"}
+    resp = client.put("/me/skills", json={"skills": "Python, SQL"}, headers=headers)
+    assert resp.status_code == 200
+    resp = client.get("/me", headers=headers)
+    assert resp.json()["skills"] == "Python, SQL"
+    
