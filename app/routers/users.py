@@ -13,6 +13,10 @@ from app.models import User, Vacancy
 from app.services.matching import find_matches
 from app.schemas import MatchOut
 
+
+from app.schemas import AnalysisOut
+from app.services.gpt_analysis import analyze_student
+
 router = APIRouter(tags=["users"])
 
 
@@ -112,3 +116,16 @@ def get_matches(
     vacancies = db.query(Vacancy).all()
     pairs = find_matches(text, vacancies)
     return [{"score": round(float(score), 3), "vacancy": v} for v, score in pairs]
+
+
+@router.get("/me/analysis", response_model=AnalysisOut)
+def analyze_me(
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    text = current_user.resume_text or current_user.skills
+    if not text:
+        raise HTTPException(status_code=400, detail="Заполни навыки или загрузи резюме")
+    vacancies = db.query(Vacancy).all()
+    matches = find_matches(text, vacancies, top_n=5)
+    return analyze_student(text, matches)

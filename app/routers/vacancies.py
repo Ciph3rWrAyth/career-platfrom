@@ -84,6 +84,7 @@ def update_vacancy(
     db.commit()
     db.refresh(vacancy)
     from app.services.matching import _vector_cache
+
     _vector_cache.pop(vacancy.id, None)
     return vacancy
 
@@ -95,6 +96,7 @@ def delete_vacancy(
     current_user: User = Depends(require_admin),
 ):
     from app.services.matching import _vector_cache
+
     _vector_cache.pop(vacancy.id, None)
     db.delete(vacancy)
     db.commit()

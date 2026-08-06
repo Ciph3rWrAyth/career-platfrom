@@ -7,6 +7,7 @@ class Settings(BaseSettings):
     secret_key: str
     hh_access_token: str | None = None
     scheduler_interval_hours: int = 24
+    openai_api_key: str | None = None
 
 
 settings = Settings()

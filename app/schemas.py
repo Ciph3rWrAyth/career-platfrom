@@ -1,6 +1,23 @@
 from pydantic import BaseModel, EmailStr
 
 
+class SkillGap(BaseModel):
+    skill: str
+    why: str
+
+
+class LearningStep(BaseModel):
+    step: int
+    topic: str
+    resource: str | None = None
+
+
+class AnalysisOut(BaseModel):
+    summary: str
+    gaps: list[SkillGap]
+    plan: list[LearningStep]
+
+
 class UserRegister(BaseModel):
     email: EmailStr
     password: str
