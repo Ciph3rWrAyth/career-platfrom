@@ -1,7 +1,7 @@
 """add role to users
 
 Revision ID: 39d0e806d3d3
-Revises: 9a0009283214
+Revises: 3bcaaeefb601
 Create Date: 2026-07-22 14:36:25.297837
 
 """
@@ -13,7 +13,7 @@ import sqlalchemy as sa
 
 # revision identifiers, used by Alembic.
 revision: str = "39d0e806d3d3"
-down_revision: Union[str, Sequence[str], None] = "9a0009283214"
+down_revision: Union[str, Sequence[str], None] = "3bcaaeefb601"
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
 
