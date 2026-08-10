@@ -31,7 +31,7 @@ def test_health():
 
 
 def test_register_and_login():
-    client.post("/register", json={"email": "test@example.com", "password": "1234"})
+    client.post("/register", json={"email": "test@example.com", "password": "password123"})
     response = client.post(
         "/login", json={"email": "test@example.com", "password": "1234"}
     )
@@ -65,7 +65,7 @@ def test_list_vacancies_open():
     assert isinstance(response.json(), list)
 
 
-def register_and_get_token(email, password="1234"):
+def register_and_get_token(email, password="password123"):
     client.post("/register", json={"email": email, "password": password})
     resp = client.post("/login", json={"email": email, "password": password})
     return resp.json()["access_token"]

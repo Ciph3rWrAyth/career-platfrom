@@ -28,7 +28,6 @@ class AnalysisOut(BaseModel):
 class SkillsUpdate(BaseModel):
     skills: str
 
-
 class VacancyCreate(BaseModel):
     title: str
     company: str
