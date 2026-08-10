@@ -7,12 +7,12 @@ def build_prompt(student_text, matches):
     vac_lines = []
     for v, score in matches:
         vac_lines.append(f"- {v.title} ({v.company}):{(v.description or '')[:200]}")
-        vacancies_block = "/n".join(vac_lines)
+    vacancies_block = "\n".join(vac_lines)
     return (
-        "Ты - карьерный консультант, Навыки/резюме студента:/n"
-        f"{student_text}/n/n"
-        "Подходящие ему вакансий:/n"
-        f"{vacancies_block}/n/n"
+        "Ты - карьерный консультант, Навыки/резюме студента:\n"
+        f"{student_text}\n\n"
+        "Подходящие ему вакансий:\n"
+        f"{vacancies_block}\n\n"
         "Найди, каких навыкоа студенту не хватает под эти вакансий и составь план обучения."
         "Ответь сторого в JSON: summary, gaps (skill, why), plan(step, topic, resource)."
     )

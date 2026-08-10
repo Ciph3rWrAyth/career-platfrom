@@ -21,7 +21,7 @@ router = APIRouter(tags=["users"])
 
 
 @router.post("/register", summary="Регистрация нового пользователя")
-def register(user: UserLogin, db: Session = Depends(get_db)):
+def register(user: UserRegister, db: Session = Depends(get_db)):
     existing_user = db.query(User).filter(User.email == user.email).first()
     if existing_user:
         raise HTTPException(status_code=400, detail="Этот email уже зарегистрирован")
@@ -38,7 +38,7 @@ def register(user: UserLogin, db: Session = Depends(get_db)):
 
 
 @router.post("/login", summary="Вход и получение JWT-токена")
-def login(user: UserRegister, db: Session = Depends(get_db)):
+def login(user: UserLogin, db: Session = Depends(get_db)):
     db_user = db.query(User).filter(User.email == user.email).first()
     if not db_user or not bcrypt.checkpw(
         user.password.encode(), db_user.hashed_password.encode()
