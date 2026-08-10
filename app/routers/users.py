@@ -14,14 +14,14 @@ from app.services.matching import find_matches
 from app.schemas import MatchOut
 
 
-from app.schemas import AnalysisOut
+from app.schemas import AnalysisOut, UserLogin
 from app.services.gpt_analysis import analyze_student
 
 router = APIRouter(tags=["users"])
 
 
-@router.post("/register")
-def register(user: UserRegister, db: Session = Depends(get_db)):
+@router.post("/register", summary="Регистрация нового пользователя")
+def register(user: UserLogin, db: Session = Depends(get_db)):
     existing_user = db.query(User).filter(User.email == user.email).first()
     if existing_user:
         raise HTTPException(status_code=400, detail="Этот email уже зарегистрирован")
@@ -37,7 +37,7 @@ def register(user: UserRegister, db: Session = Depends(get_db)):
     }
 
 
-@router.post("/login")
+@router.post("/login", summary="Вход и получение JWT-токена")
 def login(user: UserRegister, db: Session = Depends(get_db)):
     db_user = db.query(User).filter(User.email == user.email).first()
     if not db_user or not bcrypt.checkpw(
@@ -52,7 +52,7 @@ def login(user: UserRegister, db: Session = Depends(get_db)):
     }
 
 
-@router.get("/me")
+@router.get("/me", summary="Профиль текущего пользователя")
 def read_me(current_user: User = Depends(get_current_user)):
     return {
         "id": current_user.id,
@@ -62,7 +62,7 @@ def read_me(current_user: User = Depends(get_current_user)):
     }
 
 
-@router.put("/me/skills")
+@router.put("/me/skills",summary="Обновить навыки")
 def update_skills(
     data: SkillsUpdate,
     current_user: User = Depends(get_current_user),
@@ -77,7 +77,7 @@ def update_skills(
     }
 
 
-@router.post("/me/resume")
+@router.post("/me/resume",summary="Загрузить резюме (PDF)")
 def upload_resume(
     file: UploadFile = File(),
     current_user: User = Depends(get_current_user),
@@ -99,7 +99,7 @@ def upload_resume(
     }
 
 
-@router.get("/me/matches", response_model=list[MatchOut])
+@router.get("/me/matches", summary="Подбор вакансий (семантический матчинг)", response_model=list[MatchOut])
 def get_matches(
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
@@ -118,7 +118,7 @@ def get_matches(
     return [{"score": round(float(score), 3), "vacancy": v} for v, score in pairs]
 
 
-@router.get("/me/analysis", response_model=AnalysisOut)
+@router.get("/me/analysis",summary="ИИ-анализ навыков и план обучения", response_model=AnalysisOut)
 def analyze_me(
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db),

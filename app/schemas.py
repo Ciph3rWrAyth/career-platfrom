@@ -1,5 +1,13 @@
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, Field
 
+
+class UserLogin(BaseModel):
+    email: EmailStr
+    password: str
+
+
+class UserRegister(UserLogin):
+    password: str = Field(min_length=8)
 
 class SkillGap(BaseModel):
     skill: str
@@ -16,12 +24,6 @@ class AnalysisOut(BaseModel):
     summary: str
     gaps: list[SkillGap]
     plan: list[LearningStep]
-
-
-class UserRegister(BaseModel):
-    email: EmailStr
-    password: str
-
 
 class SkillsUpdate(BaseModel):
     skills: str

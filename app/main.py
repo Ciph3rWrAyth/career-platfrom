@@ -9,6 +9,8 @@ from app.routers import vacancies, users
 
 from app.core.config import settings
 
+from app.core.errors import register_error_handlers
+
 scheduler = BackgroundScheduler()
 interval_hours = settings.scheduler_interval_hours
 
@@ -24,13 +26,21 @@ async def lifespan(app: FastAPI):
     scheduler.shutdown()
     logger.info("Приложение остановлено, планировщик выключен")
 
+tags_metadata = [
+    {"name": "users", "description": "Регистрация, вход, профиль, ИИ-подбор и анализ"},
+    {"name": "vacancies", "description": "Каталог вакансий: CRUD, поиск, фильтры"},
+]
+
 
 app = FastAPI(
+    openapi_tags=tags_metadata,
     lifespan=lifespan,
     title="Career Platform API",
     description="Интеллектуальная платформа карьерного роста — бэкенд дипломной работы",
     version="0.1.0",
 )
+
+register_error_handlers(app)
 
 
 app.include_router(vacancies.router)
