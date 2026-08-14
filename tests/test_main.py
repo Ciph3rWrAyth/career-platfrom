@@ -31,7 +31,9 @@ def test_health():
 
 
 def test_register_and_login():
-    client.post("/register", json={"email": "test@example.com", "password": "password123"})
+    client.post(
+        "/register", json={"email": "test@example.com", "password": "password123"}
+    )
     response = client.post(
         "/login", json={"email": "test@example.com", "password": "password123"}
     )
@@ -73,12 +75,12 @@ def register_and_get_token(email, password="password123"):
 
 def test_me_requires_auth():
     resp = client.get("/me")
-    assert resp.status_code in (401,403)
+    assert resp.status_code in (401, 403)
 
 
 def test_me_returns_current_user():
     token = register_and_get_token("me@example.com")
-    resp = client.get("/me", headers = {"Authorization": f"Bearer {token}"})
+    resp = client.get("/me", headers={"Authorization": f"Bearer {token}"})
     assert resp.status_code == 200
     assert resp.json()["email"] == "me@example.com"
 
@@ -90,4 +92,3 @@ def test_update_skills():
     assert resp.status_code == 200
     resp = client.get("/me", headers=headers)
     assert resp.json()["skills"] == "Python, SQL"
-    

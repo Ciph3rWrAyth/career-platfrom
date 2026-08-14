@@ -1,3 +1,6 @@
+import json
+from openai import OpenAI
+
 from app.core.config import settings
 from app.schemas import AnalysisOut, SkillGap, LearningStep
 from app.logging_config import logger
@@ -13,8 +16,12 @@ def build_prompt(student_text, matches):
         f"{student_text}\n\n"
         "Подходящие ему вакансий:\n"
         f"{vacancies_block}\n\n"
-        "Найди, каких навыкоа студенту не хватает под эти вакансий и составь план обучения."
-        "Ответь сторого в JSON: summary, gaps (skill, why), plan(step, topic, resource)."
+        "Задача: определи, каких навыков студенту не хватает под эти вакансии, "
+        "и составь пошаговый план обучения.\n"
+        "Ответь строго в JSON с полями:\n"
+        "- summary: краткий вывод в 2-3 предложениях;\n"
+        "- gaps: список из 4-6 пунктов, каждый {skill, why};\n"
+        "- plan: список из 4-6 шагов, каждый {step, topic, resource}."
     )
 
 
@@ -35,4 +42,11 @@ def analyze_student(student_text, matches):
                 )
             ],
         )
-    raise NotImplementedError("Реальный вызов GPT добавим, когда будет ключ")
+    client = OpenAI(api_key=settings.openai_api_key)
+    response = client.chat.completions.create(
+        model="gpt-5.4-mini",
+        messages=[{"role": "user", "content": prompt}],
+        response_format={"type": "json_object"},
+    )
+    data = json.loads(response.choices[0].message.content)
+    return AnalysisOut(**data)

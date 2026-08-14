@@ -26,6 +26,7 @@ async def lifespan(app: FastAPI):
     scheduler.shutdown()
     logger.info("Приложение остановлено, планировщик выключен")
 
+
 tags_metadata = [
     {"name": "users", "description": "Регистрация, вход, профиль, ИИ-подбор и анализ"},
     {"name": "vacancies", "description": "Каталог вакансий: CRUD, поиск, фильтры"},

@@ -18,7 +18,7 @@ def get_vacancy_or_404(vacancy_id: int, db: Session = Depends(get_db)) -> Vacanc
     return vacancy
 
 
-@router.post("", summary = "Создать вакансию (админ)", response_model=VacancyOut)
+@router.post("", summary="Создать вакансию (админ)", response_model=VacancyOut)
 def create_vacancy(
     vacancy: VacancyCreate,
     db: Session = Depends(get_db),
@@ -38,7 +38,9 @@ def create_vacancy(
     return new_vacancy
 
 
-@router.get("", summary = "Список вакансий: поиск и фильтры", response_model=list[VacancyOut])
+@router.get(
+    "", summary="Список вакансий: поиск и фильтры", response_model=list[VacancyOut]
+)
 def list_vacancies(
     search: str | None = None,
     location: str | None = None,
@@ -63,12 +65,14 @@ def list_vacancies(
     return query.offset(skip).limit(limit).all()
 
 
-@router.get("/{vacancy_id}",summary = "Вакансия по id", response_model=VacancyOut)
+@router.get("/{vacancy_id}", summary="Вакансия по id", response_model=VacancyOut)
 def get_vacancy(vacancy: Vacancy = Depends(get_vacancy_or_404)):
     return vacancy
 
 
-@router.put("/{vacancy_id}", summary = "Обновить вакансию (админ)", response_model=VacancyOut)
+@router.put(
+    "/{vacancy_id}", summary="Обновить вакансию (админ)", response_model=VacancyOut
+)
 def update_vacancy(
     vacancy_data: VacancyCreate,
     vacancy: Vacancy = Depends(get_vacancy_or_404),
@@ -89,7 +93,7 @@ def update_vacancy(
     return vacancy
 
 
-@router.delete("/{vacancy_id}",summary = "Удалить вакансию (админ)")
+@router.delete("/{vacancy_id}", summary="Удалить вакансию (админ)")
 def delete_vacancy(
     vacancy: Vacancy = Depends(get_vacancy_or_404),
     db: Session = Depends(get_db),

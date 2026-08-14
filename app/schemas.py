@@ -1,6 +1,14 @@
 from pydantic import BaseModel, EmailStr, Field
 
 
+class ChatRequest(BaseModel):
+    message: str
+
+
+class ChatReply(BaseModel):
+    reply: str
+
+
 class UserLogin(BaseModel):
     email: EmailStr
     password: str
@@ -8,6 +16,7 @@ class UserLogin(BaseModel):
 
 class UserRegister(UserLogin):
     password: str = Field(min_length=8)
+
 
 class SkillGap(BaseModel):
     skill: str
@@ -25,8 +34,10 @@ class AnalysisOut(BaseModel):
     gaps: list[SkillGap]
     plan: list[LearningStep]
 
+
 class SkillsUpdate(BaseModel):
     skills: str
+
 
 class VacancyCreate(BaseModel):
     title: str

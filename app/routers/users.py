@@ -14,8 +14,10 @@ from app.services.matching import find_matches
 from app.schemas import MatchOut
 
 
-from app.schemas import AnalysisOut, UserLogin
+from app.schemas import AnalysisOut, UserLogin, ChatRequest, ChatReply
 from app.services.gpt_analysis import analyze_student
+
+from app.services.chat import chat_with_student
 
 router = APIRouter(tags=["users"])
 
@@ -62,7 +64,7 @@ def read_me(current_user: User = Depends(get_current_user)):
     }
 
 
-@router.put("/me/skills",summary="Обновить навыки")
+@router.put("/me/skills", summary="Обновить навыки")
 def update_skills(
     data: SkillsUpdate,
     current_user: User = Depends(get_current_user),
@@ -77,7 +79,7 @@ def update_skills(
     }
 
 
-@router.post("/me/resume",summary="Загрузить резюме (PDF)")
+@router.post("/me/resume", summary="Загрузить резюме (PDF)")
 def upload_resume(
     file: UploadFile = File(),
     current_user: User = Depends(get_current_user),
@@ -99,7 +101,11 @@ def upload_resume(
     }
 
 
-@router.get("/me/matches", summary="Подбор вакансий (семантический матчинг)", response_model=list[MatchOut])
+@router.get(
+    "/me/matches",
+    summary="Подбор вакансий (семантический матчинг)",
+    response_model=list[MatchOut],
+)
 def get_matches(
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
@@ -118,7 +124,11 @@ def get_matches(
     return [{"score": round(float(score), 3), "vacancy": v} for v, score in pairs]
 
 
-@router.get("/me/analysis",summary="ИИ-анализ навыков и план обучения", response_model=AnalysisOut)
+@router.get(
+    "/me/analysis",
+    summary="ИИ-анализ навыков и план обучения",
+    response_model=AnalysisOut,
+)
 def analyze_me(
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
@@ -129,3 +139,14 @@ def analyze_me(
     vacancies = db.query(Vacancy).all()
     matches = find_matches(text, vacancies, top_n=5)
     return analyze_student(text, matches)
+
+
+
+@router.post("/me/chat", response_model=ChatReply, summary="Чат с карьерным консультантом")
+def chat(
+    request: ChatRequest,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    reply = chat_with_student(db,current_user, request.message)
+    return ChatReply(reply=reply)
