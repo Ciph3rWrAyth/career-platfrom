@@ -1,4 +1,5 @@
 from pydantic import BaseModel, EmailStr, Field
+from datetime import datetime 
 
 
 class ChatRequest(BaseModel):
@@ -57,3 +58,9 @@ class VacancyOut(VacancyCreate):
 class MatchOut(BaseModel):
     score: float
     vacancy: VacancyOut
+
+class ChatMessageOut(BaseModel):
+    role: str
+    content: str
+    created_at: datetime
+    model_config = {"from_attributes": True}

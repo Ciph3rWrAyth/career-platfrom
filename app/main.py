@@ -11,6 +11,9 @@ from app.core.config import settings
 
 from app.core.errors import register_error_handlers
 
+from fastapi.middleware.cors import CORSMiddleware
+
+
 scheduler = BackgroundScheduler()
 interval_hours = settings.scheduler_interval_hours
 
@@ -43,6 +46,17 @@ app = FastAPI(
 
 register_error_handlers(app)
 
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://localhost:5173",
+        "http://localhost:3000",
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 app.include_router(vacancies.router)
 app.include_router(users.router)

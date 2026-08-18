@@ -9,12 +9,12 @@ from app.auth import create_token, get_current_user
 from fastapi import UploadFile, File
 from pypdf import PdfReader
 
-from app.models import User, Vacancy
+from app.models import User, Vacancy, ChatMessage
 from app.services.matching import find_matches
 from app.schemas import MatchOut
 
 
-from app.schemas import AnalysisOut, UserLogin, ChatRequest, ChatReply
+from app.schemas import AnalysisOut, UserLogin, ChatRequest, ChatReply, ChatMessageOut
 from app.services.gpt_analysis import analyze_student
 
 from app.services.chat import chat_with_student
@@ -122,6 +122,20 @@ def get_matches(
     vacancies = db.query(Vacancy).all()
     pairs = find_matches(text, vacancies)
     return [{"score": round(float(score), 3), "vacancy": v} for v, score in pairs]
+
+
+@router.get("/me/chat/history", summary="История чата", response_model=list[ChatMessageOut])
+def get_history(
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    messages = (
+        db.query(ChatMessage)
+        .filter(ChatMessage.user_id == current_user.id)
+        .order_by(ChatMessage.created_at)
+        .all()
+    )
+    return messages
 
 
 @router.get(
