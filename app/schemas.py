@@ -1,5 +1,5 @@
 from pydantic import BaseModel, EmailStr, Field
-from datetime import datetime 
+from datetime import datetime
 
 
 class ChatRequest(BaseModel):
@@ -58,6 +58,7 @@ class VacancyOut(VacancyCreate):
 class MatchOut(BaseModel):
     score: float
     vacancy: VacancyOut
+
 
 class ChatMessageOut(BaseModel):
     role: str

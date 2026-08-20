@@ -20,6 +20,8 @@ def _get_vacancy_vectors(vacancies):
 
 
 def find_matches(skills, vacancies, top_n=10):
+    if not vacancies:
+        return[]
     vacancy_vectors = _get_vacancy_vectors(vacancies)
     skills_vector = model.encode([skills])
 

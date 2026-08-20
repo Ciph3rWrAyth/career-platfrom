@@ -14,6 +14,10 @@ from app.core.errors import register_error_handlers
 from fastapi.middleware.cors import CORSMiddleware
 
 
+from slowapi import _rate_limit_exceeded_handler
+from slowapi.errors import RateLimitExceeded
+from app.core.limiter import limiter
+
 scheduler = BackgroundScheduler()
 interval_hours = settings.scheduler_interval_hours
 
@@ -45,6 +49,8 @@ app = FastAPI(
 )
 
 register_error_handlers(app)
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
 
 app.add_middleware(

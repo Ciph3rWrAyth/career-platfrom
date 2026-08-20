@@ -19,6 +19,9 @@ from app.services.gpt_analysis import analyze_student
 
 from app.services.chat import chat_with_student
 
+from fastapi import Request
+from app.core.limiter import limiter
+
 router = APIRouter(tags=["users"])
 
 
@@ -40,7 +43,8 @@ def register(user: UserRegister, db: Session = Depends(get_db)):
 
 
 @router.post("/login", summary="Вход и получение JWT-токена")
-def login(user: UserLogin, db: Session = Depends(get_db)):
+@limiter.limit("5/minute")
+def login(request: Request, user: UserLogin, db: Session = Depends(get_db)):
     db_user = db.query(User).filter(User.email == user.email).first()
     if not db_user or not bcrypt.checkpw(
         user.password.encode(), db_user.hashed_password.encode()
@@ -79,6 +83,9 @@ def update_skills(
     }
 
 
+MAX_RESUME_SIZE = 5 * 1024 * 1024
+
+
 @router.post("/me/resume", summary="Загрузить резюме (PDF)")
 def upload_resume(
     file: UploadFile = File(),
@@ -87,6 +94,11 @@ def upload_resume(
 ):
     if file.content_type != "application/pdf":
         raise HTTPException(status_code=400, detail="Загрузите файл в формат PDF")
+
+    if file.size and file.size > MAX_RESUME_SIZE:
+        raise HTTPException(
+            status_code=413, detail="Резюме слишком большое (макс. 5 МБ )"
+        )
     reader = PdfReader(file.file)
     text = ""
     for page in reader.pages:
@@ -124,7 +136,9 @@ def get_matches(
     return [{"score": round(float(score), 3), "vacancy": v} for v, score in pairs]
 
 
-@router.get("/me/chat/history", summary="История чата", response_model=list[ChatMessageOut])
+@router.get(
+    "/me/chat/history", summary="История чата", response_model=list[ChatMessageOut]
+)
 def get_history(
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
@@ -143,7 +157,9 @@ def get_history(
     summary="ИИ-анализ навыков и план обучения",
     response_model=AnalysisOut,
 )
+@limiter.limit("5/minute")
 def analyze_me(
+    request: Request,
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
@@ -155,12 +171,15 @@ def analyze_me(
     return analyze_student(text, matches)
 
 
-
-@router.post("/me/chat", response_model=ChatReply, summary="Чат с карьерным консультантом")
+@router.post(
+    "/me/chat", response_model=ChatReply, summary="Чат с карьерным консультантом"
+)
+@limiter.limit("5/minute")
 def chat(
-    request: ChatRequest,
+    request: Request,
+    body: ChatRequest,
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
-    reply = chat_with_student(db,current_user, request.message)
+    reply = chat_with_student(db, current_user, body.message)
     return ChatReply(reply=reply)
