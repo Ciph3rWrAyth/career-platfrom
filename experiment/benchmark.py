@@ -1,7 +1,6 @@
 import sys
 import os
 
-# добавляем корень проекта в путь, чтобы из подпапки импортировать пакет app
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import time
@@ -14,13 +13,11 @@ vacancies = db.query(Vacancy).all()
 db.close()
 
 skills = "Python, FastAPI, SQL"
-
-# 1-й вызов — ХОЛОДНЫЙ: заполняет кэш (столько стоил КАЖДЫЙ запрос раньше)
 start = time.perf_counter()
 find_matches(skills, vacancies)
 cold = time.perf_counter() - start
 
-# следующие 5 — ТЁПЛЫЕ: берут векторы из кэша
+
 start = time.perf_counter()
 for _ in range(5):
     find_matches(skills, vacancies)
