@@ -50,9 +50,16 @@ class VacancyCreate(BaseModel):
     source: str | None = None
 
 
-class VacancyOut(VacancyCreate):
+class VacancyCreate(VacancyBase):
+    description: str
+
+class VacancyShort(VacancyBase):
     id: int
     model_config = {"from_attributes": True}
+
+
+class VacancyOut(VacancyCreate):
+    description: str
 
 
 class ChatMessageOut(BaseModel):
@@ -64,6 +71,6 @@ class ChatMessageOut(BaseModel):
 
 class MatchOut(BaseModel):
     score: float
-    vacancy: VacancyOut
+    vacancy: VacancyShort
     matched_skills: list[str]
     missing_skills: list[str]

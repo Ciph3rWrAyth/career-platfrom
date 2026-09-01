@@ -4,7 +4,7 @@ from sqlalchemy import or_
 
 from app.database import get_db
 from app.models import User, Vacancy
-from app.schemas import VacancyCreate, VacancyOut
+from app.schemas import VacancyCreate, VacancyOut, VacancyShort
 
 from app.auth import require_admin
 
@@ -39,7 +39,7 @@ def create_vacancy(
 
 
 @router.get(
-    "", summary="Список вакансий: поиск и фильтры", response_model=list[VacancyOut]
+    "", summary="Список вакансий: поиск и фильтры", response_model=list[VacancyShort]
 )
 def list_vacancies(
     search: str | None = None,
