@@ -21,7 +21,7 @@ def _get_vacancy_vectors(vacancies):
 
 def find_matches(skills, vacancies, top_n=10):
     if not vacancies:
-        return[]
+        return []
     vacancy_vectors = _get_vacancy_vectors(vacancies)
     skills_vector = model.encode([skills])
 
@@ -33,3 +33,37 @@ def find_matches(skills, vacancies, top_n=10):
 
 def clear_cache():
     _vector_cache.clear()
+
+
+SKILLS = {
+    "python",
+    "java",
+    "javascript",
+    "typescript",
+    "sql",
+    "postgresql",
+    "docker",
+    "git",
+    "fastapi",
+    "django",
+    "flask",
+    "react",
+    "linux",
+    "rest",
+    "kubernetes",
+    "redis",
+    "kafka",
+    "html",
+    "css",
+    "spring",
+}
+
+
+def match_skills(student_text: str, vacancy_text: str) -> tuple[list[str], list[str]]:
+    student_text = (student_text or "").lower()
+    vacancy_text = (vacancy_text or "").lower()
+    student = {skill for skill in SKILLS if skill in student_text}
+    required = {skill for skill in SKILLS if skill in vacancy_text}
+    matched = student & required
+    missing = required - student
+    return sorted(matched), sorted(missing)

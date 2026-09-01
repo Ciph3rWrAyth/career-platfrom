@@ -55,13 +55,15 @@ class VacancyOut(VacancyCreate):
     model_config = {"from_attributes": True}
 
 
-class MatchOut(BaseModel):
-    score: float
-    vacancy: VacancyOut
-
-
 class ChatMessageOut(BaseModel):
     role: str
     content: str
     created_at: datetime
     model_config = {"from_attributes": True}
+
+
+class MatchOut(BaseModel):
+    score: float
+    vacancy: VacancyOut
+    matched_skills: list[str]
+    missing_skills: list[str]

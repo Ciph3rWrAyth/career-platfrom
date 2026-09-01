@@ -1,16 +1,14 @@
 import bcrypt
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, Request, Query
 from sqlalchemy.orm import Session
 
 from app.database import get_db
 from app.schemas import UserRegister, SkillsUpdate
 from app.auth import create_token, get_current_user
-
-from fastapi import UploadFile, File
 from pypdf import PdfReader
 
 from app.models import User, Vacancy, ChatMessage
-from app.services.matching import find_matches
+from app.services.matching import find_matches, match_skills
 from app.schemas import MatchOut
 
 
@@ -19,8 +17,8 @@ from app.services.gpt_analysis import analyze_student
 
 from app.services.chat import chat_with_student
 
-from fastapi import Request
 from app.core.limiter import limiter
+
 
 router = APIRouter(tags=["users"])
 
@@ -122,6 +120,7 @@ def get_matches(
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
     source: str = "skills",
+    top_n: int = Query(10, ge=1, le=50),
 ):
     if source == "resume":
         text = current_user.resume_text
@@ -132,8 +131,17 @@ def get_matches(
             status_code=400, detail="нет данных: заполни навыки или загрузи резюме"
         )
     vacancies = db.query(Vacancy).all()
-    pairs = find_matches(text, vacancies)
-    return [{"score": round(float(score), 3), "vacancy": v} for v, score in pairs]
+    pairs = find_matches(text, vacancies, top_n=top_n)
+    result= []
+    for v, score in pairs:
+        matched, missing = match_skills(text, v.description or "")
+        result.append({
+            "score": round(float(score), 3),
+            "vacancy": v,
+            "matched_skills":matched,
+            "missing_skills":missing,
+        })
+    return result
 
 
 @router.get(
