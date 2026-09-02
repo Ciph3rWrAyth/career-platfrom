@@ -8,7 +8,7 @@ from app.auth import create_token, get_current_user
 from pypdf import PdfReader
 
 from app.models import User, Vacancy, ChatMessage
-from app.services.matching import find_matches, match_skills
+from app.services.matching import match_vacancies
 from app.schemas import MatchOut
 
 
@@ -131,17 +131,7 @@ def get_matches(
             status_code=400, detail="нет данных: заполни навыки или загрузи резюме"
         )
     vacancies = db.query(Vacancy).all()
-    pairs = find_matches(text, vacancies, top_n=top_n)
-    result= []
-    for v, score in pairs:
-        matched, missing = match_skills(text, v.description or "")
-        result.append({
-            "score": round(float(score), 3),
-            "vacancy": v,
-            "matched_skills":matched,
-            "missing_skills":missing,
-        })
-    return result
+    return match_vacancies(text, vacancies, top_n=top_n)
 
 
 @router.get(

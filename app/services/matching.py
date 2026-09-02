@@ -68,3 +68,17 @@ def match_skills(student_text: str, vacancy_text: str) -> tuple[list[str], list[
     matched = student & required
     missing = required - student
     return sorted(matched), sorted(missing)
+
+
+def match_vacancies(text, vacancies, top_n=10):
+    pairs = find_matches(text, vacancies, top_n=top_n)
+    result = []
+    for v, score in pairs:
+        matched, missing = match_skills(text, v.description or "")
+        result.append({
+            "score": round(float(score), 3),
+            "vacancy": v,
+            "matched_skills":matched,
+            "missing_skills":missing,
+        })
+    return result
