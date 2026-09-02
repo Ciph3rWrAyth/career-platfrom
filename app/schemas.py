@@ -40,18 +40,18 @@ class SkillsUpdate(BaseModel):
     skills: str
 
 
-class VacancyCreate(BaseModel):
+class VacancyBase(BaseModel):
     title: str
     company: str
     location: str
     salary: str | None = None
-    description: str
     url: str | None = None
     source: str | None = None
 
 
 class VacancyCreate(VacancyBase):
     description: str
+
 
 class VacancyShort(VacancyBase):
     id: int

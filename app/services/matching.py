@@ -1,4 +1,5 @@
 import os
+import re 
 
 os.environ["HF_HUB_OFFLINE"] = "1"
 
@@ -60,10 +61,10 @@ SKILLS = {
 
 
 def match_skills(student_text: str, vacancy_text: str) -> tuple[list[str], list[str]]:
-    student_text = (student_text or "").lower()
-    vacancy_text = (vacancy_text or "").lower()
-    student = {skill for skill in SKILLS if skill in student_text}
-    required = {skill for skill in SKILLS if skill in vacancy_text}
+    student_words = set(re.findall(r"\w+", (student_text or "").lower()))
+    vacancy_words = set(re.findall(r"\w+", (vacancy_text or "").lower()))
+    student = {skill for skill in SKILLS if skill in student_words}
+    required = {skill for skill in SKILLS if skill in vacancy_words}
     matched = student & required
     missing = required - student
     return sorted(matched), sorted(missing)
