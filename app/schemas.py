@@ -38,6 +38,8 @@ class AnalysisOut(BaseModel):
 
 class SkillsUpdate(BaseModel):
     skills: str
+    city: str | None = None
+    desired_position: str  | None = None
 
 
 class VacancyBase(BaseModel):

@@ -11,6 +11,8 @@ class User(Base):
     skills = Column(String, nullable=True)
     resume_text = Column(Text, nullable=True)
     role = Column(String, nullable=False, server_default="user")
+    city = Column(String, nullable=True)
+    desired_position = Column(String, nullable=True)
 
 
 class Vacancy(Base):

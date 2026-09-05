@@ -8,7 +8,7 @@ from app.auth import create_token, get_current_user
 from pypdf import PdfReader
 
 from app.models import User, Vacancy, ChatMessage
-from app.services.matching import match_vacancies
+from app.services.matching import match_vacancies, find_matches
 from app.schemas import MatchOut
 
 
@@ -62,6 +62,8 @@ def read_me(current_user: User = Depends(get_current_user)):
         "id": current_user.id,
         "email": current_user.email,
         "skills": current_user.skills,
+        "city": current_user.city,
+        "desired_position": current_user.desired_position,
         "role": current_user.role,
     }
 
@@ -73,6 +75,10 @@ def update_skills(
     db: Session = Depends(get_db),
 ):
     current_user.skills = data.skills
+    if data.city is not None:
+        current_user.city = data.city
+    if data.desired_position is not None:
+        current_user.desired_position = data.desired_position
     db.commit()
     return {
         "id": current_user.id,
