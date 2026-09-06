@@ -76,3 +76,9 @@ class MatchOut(BaseModel):
     vacancy: VacancyShort
     matched_skills: list[str]
     missing_skills: list[str]
+
+
+class VacancyStats(BaseModel):
+    total: int
+    by_city: dict[str, int]
+    last_updated: datetime | None

@@ -1,10 +1,10 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from sqlalchemy import or_
+from sqlalchemy import or_ , func 
 
 from app.database import get_db
 from app.models import User, Vacancy
-from app.schemas import VacancyCreate, VacancyOut, VacancyShort
+from app.schemas import VacancyCreate, VacancyOut, VacancyShort, VacancyStats
 
 from app.auth import require_admin
 
@@ -63,6 +63,21 @@ def list_vacancies(
         query = query.filter(Vacancy.source == source)
 
     return query.offset(skip).limit(limit).all()
+
+
+@router.get("/stats", summary="Статистика вакансий", response_model=VacancyStats)
+def vacancy_stats(db: Session = Depends(get_db)):
+    total = db.query(func.count(Vacancy.id)).scalar()
+    rows = db.query(Vacancy.location, func.count(Vacancy.id)).group_by(Vacancy.location).all()
+    by_city = {location: count for location, count in rows}
+    last_updated = db.query(func.max(Vacancy.last_seen)).scalar()
+    return{
+        "total":total,
+        "by_city":by_city,
+        "last_updated": last_updated
+    }
+
+    
 
 
 @router.get("/{vacancy_id}", summary="Вакансия по id", response_model=VacancyOut)
