@@ -82,3 +82,11 @@ def match_vacancies(text, vacancies, top_n=10):
             "missing_skills":missing,
         })
     return result
+
+
+def match_one(student_text, vacancy_text):
+    student_vec = model.encode([student_text])
+    vacancy_vec = model.encode([vacancy_text])
+    score = model.similarity(student_vec, vacancy_vec)[0][0]
+    matched, missing = match_skills(student_text, vacancy_text)
+    return round(float(score), 3), matched, missing 

@@ -78,8 +78,6 @@ def vacancy_stats(db: Session = Depends(get_db)):
     }
 
     
-
-
 @router.get("/{vacancy_id}", summary="Вакансия по id", response_model=VacancyOut)
 def get_vacancy(vacancy: Vacancy = Depends(get_vacancy_or_404)):
     return vacancy

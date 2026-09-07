@@ -82,3 +82,12 @@ class VacancyStats(BaseModel):
     total: int
     by_city: dict[str, int]
     last_updated: datetime | None
+
+
+class SelfCheckIn(BaseModel):
+    text:str
+
+class SelfCheckOut(BaseModel):
+    score:float
+    matched_skills: list[str]
+    missing_skills: list[str]

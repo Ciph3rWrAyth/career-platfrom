@@ -8,11 +8,9 @@ from app.auth import create_token, get_current_user
 from pypdf import PdfReader
 
 from app.models import User, Vacancy, ChatMessage
-from app.services.matching import match_vacancies, find_matches
-from app.schemas import MatchOut
+from app.services.matching import match_vacancies, find_matches, match_one
 
-
-from app.schemas import AnalysisOut, UserLogin, ChatRequest, ChatReply, ChatMessageOut
+from app.schemas import AnalysisOut, UserLogin, ChatRequest, ChatReply, ChatMessageOut, MatchOut, SelfCheckIn, SelfCheckOut
 from app.services.gpt_analysis import analyze_student
 
 from app.services.chat import chat_with_student
@@ -138,6 +136,22 @@ def get_matches(
         )
     vacancies = db.query(Vacancy).all()
     return match_vacancies(text, vacancies, top_n=top_n)
+
+
+@router.post("/me/match", summary="Проверить себя против вставленной вакансий", response_model=SelfCheckOut)
+def self_check(
+    data:SelfCheckIn,
+    current_user: User = Depends(get_current_user),
+):
+    text = current_user.skills
+    if not text:
+        raise HTTPException(status_code=400, detail="Сначала заполни навыки в профиле")
+    score, matched, missing = match_one(text, data.text)
+    return{
+        "score": score,
+        "matched_skills": matched,
+        "missing_skills": missing,
+    }
 
 
 @router.get(
