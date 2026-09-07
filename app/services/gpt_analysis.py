@@ -1,9 +1,14 @@
 import json
+from urllib.parse import quote_plus
 from openai import OpenAI
 
 from app.core.config import settings
 from app.schemas import AnalysisOut, SkillGap, LearningStep
 from app.logging_config import logger
+
+
+def search_link(topic):
+    return "https://www.youtube.com/results?search_query=" + quote_plus(topic)
 
 
 def build_prompt(student_text, matches):
@@ -21,7 +26,9 @@ def build_prompt(student_text, matches):
         "Ответь строго в JSON с полями:\n"
         "- summary: краткий вывод в 2-3 предложениях;\n"
         "- gaps: список из 4-6 пунктов, каждый {skill, why};\n"
-        "- plan: список из 4-6 шагов, каждый {step, topic, resource}."
+        "- plan: список из 4-6 шагов, каждый {step, topic}. "
+        "step — номер шага, ЦЕЛОЕ ЧИСЛО (1, 2, 3), без текста. "
+        "topic — название темы отдельным полем. Номер и тему НЕ слепляй в одну строку.\n"
     )
 
 
@@ -38,7 +45,7 @@ def analyze_student(student_text, matches):
             ],
             plan=[
                 LearningStep(
-                    step=1, topic="Основы Docker", resource="официальный туториал"
+                    step=1, topic="Основы Docker", resource=search_link("Основе Docker")
                 )
             ],
         )
@@ -49,4 +56,7 @@ def analyze_student(student_text, matches):
         response_format={"type": "json_object"},
     )
     data = json.loads(response.choices[0].message.content)
-    return AnalysisOut(**data)
+    result = AnalysisOut(**data)
+    for step in result.plan:
+        step.resource = search_link(step.topic)
+    return result
