@@ -1,15 +1,29 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 from sqlalchemy import or_ , func 
 
 from app.database import get_db
 from app.models import User, Vacancy
 from app.schemas import VacancyCreate, VacancyOut, VacancyShort, VacancyStats
+from sqlalchemy.exc import IntegrityError
 
 from app.auth import require_admin
 
 router = APIRouter(prefix="/vacancies", tags=["vacancies"])
 
+URL_UNIQUE_INDEX = "ix_vacancies_url"
+
+def commit_or_url_conflict(db: Session) -> None:
+    try:
+        db.commit()
+    except IntegrityError as error:
+        db.rollback()
+        diag = getattr(error.orig, "diag", None)
+        if diag is not None and diag.constraint_name == URL_UNIQUE_INDEX:
+            raise HTTPException(
+                status_code=409,detail="Вакансия с таким URL уже существует"
+            )
+        raise
 
 def get_vacancy_or_404(vacancy_id: int, db: Session = Depends(get_db)) -> Vacancy:
     vacancy = db.query(Vacancy).filter(Vacancy.id == vacancy_id).first()
@@ -34,7 +48,7 @@ def create_vacancy(
         source="manual",
     )
     db.add(new_vacancy)
-    db.commit()
+    commit_or_url_conflict(db)
     db.refresh(new_vacancy)
     return new_vacancy
 
@@ -46,8 +60,8 @@ def list_vacancies(
     search: str | None = None,
     location: str | None = None,
     source: str | None = None,
-    skip: int = 0,
-    limit: int = 20,
+    skip: int = Query(0, ge=0),
+    limit: int = Query(20, ge=1, le=100),
     db: Session = Depends(get_db),
 ):
     query = db.query(Vacancy)
@@ -99,7 +113,7 @@ def update_vacancy(
     vacancy.salary = vacancy_data.salary
     vacancy.description = vacancy_data.description
     vacancy.url = vacancy_data.url
-    db.commit()
+    commit_or_url_conflict(db)
     db.refresh(vacancy)
     from app.services.matching import _vector_cache
 

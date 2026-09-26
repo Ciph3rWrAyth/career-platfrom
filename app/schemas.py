@@ -1,4 +1,4 @@
-from pydantic import BaseModel, EmailStr, Field
+from pydantic import BaseModel, EmailStr, Field, field_validator
 from datetime import datetime
 
 
@@ -10,9 +10,18 @@ class ChatReply(BaseModel):
     reply: str
 
 
+MAX_PASSWORD_BYTES = 72
+
 class UserLogin(BaseModel):
     email: EmailStr
     password: str
+
+    @field_validator("password")
+    @classmethod
+    def password_fits_bcrypt(cls, v: str)  -> str:
+        if len(v.encode("utf-8")) > MAX_PASSWORD_BYTES:
+            raise ValueError(f"пароль длинее {MAX_PASSWORD_BYTES} байт (UTF-8)")
+        return v
 
 
 class UserRegister(UserLogin):

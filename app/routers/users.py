@@ -5,6 +5,7 @@ from sqlalchemy.orm import Session
 from app.database import get_db
 from app.schemas import UserRegister, SkillsUpdate
 from app.auth import create_token, get_current_user
+from pypdf.errors import PyPdfError, DependencyError
 from pypdf import PdfReader
 
 from app.models import User, Vacancy, ChatMessage
@@ -94,17 +95,22 @@ def upload_resume(
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
-    if file.content_type != "application/pdf":
-        raise HTTPException(status_code=400, detail="Загрузите файл в формат PDF")
-
-    if file.size and file.size > MAX_RESUME_SIZE:
+    try:
+        reader = PdfReader(file.file)
+        text = ""
+        for page in reader.pages:
+            text += page.extract_text() or ""
+    except (PyPdfError, DependencyError):
         raise HTTPException(
-            status_code=413, detail="Резюме слишком большое (макс. 5 МБ )"
+            status_code=422,
+            detail="Не удалось прочитать PDF: файл поврежден или защищен паролем",
         )
-    reader = PdfReader(file.file)
-    text = ""
-    for page in reader.pages:
-        text += page.extract_text() or ""
+    if not text.strip():
+        raise HTTPException(
+            status_code=422,
+            detail="В PDF не найден текст - похоже на скан. нужен PDF c текстовым слоем "
+        )
+
     current_user.resume_text = text
     db.commit()
 
