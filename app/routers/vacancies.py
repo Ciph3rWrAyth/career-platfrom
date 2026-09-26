@@ -31,6 +31,7 @@ def create_vacancy(
         salary=vacancy.salary,
         description=vacancy.description,
         url=vacancy.url,
+        source="manual",
     )
     db.add(new_vacancy)
     db.commit()

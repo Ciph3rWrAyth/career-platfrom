@@ -48,7 +48,6 @@ class VacancyBase(BaseModel):
     location: str
     salary: str | None = None
     url: str | None = None
-    source: str | None = None
 
 
 class VacancyCreate(VacancyBase):
@@ -57,10 +56,11 @@ class VacancyCreate(VacancyBase):
 
 class VacancyShort(VacancyBase):
     id: int
+    source: str | None = None
     model_config = {"from_attributes": True}
 
 
-class VacancyOut(VacancyCreate):
+class VacancyOut(VacancyShort):
     description: str
 
 
