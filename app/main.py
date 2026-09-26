@@ -24,14 +24,28 @@ interval_hours = settings.scheduler_interval_hours
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    scheduler.add_job(refresh_vacancies, "interval", hours=interval_hours)
-    scheduler.start()
-    logger.info(
+    if settings.scheduler_enabled:
+        scheduler.add_job(refresh_vacancies, "interval", hours=interval_hours)
+        scheduler.start()
+        logger.info(
         f"Приложение запущено, планировщик активен (интервал {interval_hours}ч)"
     )
+    else:
+        logger.info("Приложение запущено, планировщик выключен (SCHEDULER_ENABLED=false)")
     yield
-    scheduler.shutdown()
-    logger.info("Приложение остановлено, планировщик выключен")
+    if scheduler.running:
+        scheduler.shutdown()
+        logger.info("Приложение остановлено, планировщик выключен")
+    else:
+        logger.info ("Приложние остановлено")    
+    
+    
+    
+
+
+    # yield
+    # scheduler.shutdown()
+    # logger.info("Приложение остановлено, планировщик выключен")
 
 
 tags_metadata = [
