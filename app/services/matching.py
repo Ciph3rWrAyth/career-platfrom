@@ -6,7 +6,8 @@ os.environ["HF_HUB_OFFLINE"] = "1"
 import numpy as np
 from sentence_transformers import SentenceTransformer
 
-model = SentenceTransformer("paraphrase-multilingual-MiniLM-L12-v2")
+MODEL_PATH = os.getenv("MODEL_DIR", "paraphrase-multilingual-MiniLM-L12-v2")
+model = SentenceTransformer(MODEL_PATH, local_files_only=True)
 
 _vector_cache = {}
 
