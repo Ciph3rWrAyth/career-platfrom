@@ -1,8 +1,9 @@
 import json
 from urllib.parse import quote_plus
-from openai import OpenAI
+from pydantic import ValidationError 
 
-from app.core.config import settings
+from app.core.exceptions import AIBadResponse
+from app.services.ai_client import get_client, ask 
 from app.schemas import AnalysisOut, SkillGap, LearningStep
 from app.logging_config import logger
 
@@ -35,28 +36,19 @@ def build_prompt(student_text, matches):
 def analyze_student(student_text, matches):
     prompt = build_prompt(student_text, matches)
     logger.info(f"Собран промт для GPT ({len(prompt)} cимволов)")
-    if not settings.openai_api_key:
-        return AnalysisOut(
-            summary="[ДЕМО] Здесь будет анализ от GPT. Промпт собран, ждём ключ API",
-            gaps=[
-                SkillGap(
-                    skill="Docker", why="есть в целевых вакансиях, но нет в резюме"
-                )
-            ],
-            plan=[
-                LearningStep(
-                    step=1, topic="Основы Docker", resource=search_link("Основе Docker")
-                )
-            ],
-        )
-    client = OpenAI(api_key=settings.openai_api_key)
-    response = client.chat.completions.create(
+    client = get_client()
+    response = ask(
+        client,
         model="gpt-5.4-mini",
         messages=[{"role": "user", "content": prompt}],
         response_format={"type": "json_object"},
     )
-    data = json.loads(response.choices[0].message.content)
-    result = AnalysisOut(**data)
+    try:
+        data = json.loads(response.choices[0].message.content)
+        result = AnalysisOut(**data)
+    except (json.JSONDecodeError, ValidationError, TypeError, IndexError) as error:
+        raise AIBadResponse(f"{type(error).__name__}:{error}")
+
     for step in result.plan:
         step.resource = search_link(step.topic)
     return result
