@@ -3,7 +3,7 @@ from datetime import datetime
 
 
 class ChatRequest(BaseModel):
-    message: str
+    message: str = Field(max_length=2000)
 
 
 class ChatReply(BaseModel):

@@ -39,6 +39,7 @@ def analyze_student(student_text, matches):
     client = get_client()
     response = ask(
         client,
+        max_completion_tokens=1500,
         model="gpt-5.4-mini",
         messages=[{"role": "user", "content": prompt}],
         response_format={"type": "json_object"},
